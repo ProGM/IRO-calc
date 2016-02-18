@@ -357,7 +357,7 @@ function LoadCookie()
 	cookieNum = formElements["saveList"].value;
 	SaveData = document.cookie.split("; ");
 	wStr = "";
-	
+
 	for ( var i = 0; SaveData[i]; i++ )
 	{
 		if ( SaveData[i].substr(0,6) == cookieNum + "=" )
@@ -367,12 +367,12 @@ function LoadCookie()
 		}
 	}
 	// wStr now equals the save string
-	
+
 	for ( var i = 0; i <= 88; i++ )
 	{
 		SaveData[i] = 0;
 	}
-	
+
 	// Clean the data
 	j=0;
 	for ( var i = 0; i <= 88; i++ )
@@ -456,7 +456,7 @@ function LoadCookie()
 	formElements["A_LUK"].value = SaveData[8];
 
 	formElements["A_HSE"].value = SaveData[9];
-	
+
 	formElements["A_WeaponType"].value = SaveData[10];
 	ClickWeaponType(SaveData[10]);
 	if ( ( SaveData[0] == cls_ASS || SaveData[0] == cls_ASX || SaveData[0] == cls_GLT || SaveData[0] == cls_GLTt ) &&
@@ -539,7 +539,7 @@ function LoadCookie()
 
 	formElements["A_youshi"].checked = SaveData[63];
 	formElements["A_Weapon_element"].value = SaveData[64];
-	
+
 	// Acolyte Buffs
 	for ( var i = 0; i < ksAcolyteBuffCount; i++ )
 	{
@@ -568,7 +568,7 @@ function LoadCookie()
 	formElements["suraAgi"].value = acolyteBuffs[ksSuraAgility];
 	formElements["suraVit"].value = acolyteBuffs[ksSuraVitality];
 	formElements["suraDex"].value = acolyteBuffs[ksSuraDexterity];
-	
+
 	if ( SaveData[14] >= 3 )
 	{
 		formElements["A_HEAD_DEF_PLUS"].value = SaveData[84];
@@ -586,7 +586,7 @@ function LoadCookie()
 		formElements["A_SHOES_DEF_PLUS"].value = 0;
 	}
 
-	
+
 	StCalc(1);
 
 	calc();
@@ -631,7 +631,7 @@ function LoadCookie3()
 { // Save SaveData[] to cookie
 	var formElements = document.forms["calcForm"].elements;
 	SaveData = new Array();
-	
+
 	for ( var k = 0; k < 16; k++ )
 	{
 		cookieNum = "num0" + k;
@@ -783,7 +783,7 @@ function LoadDataINIT()
 				break;
 			}
 		}
-		
+
 		if ( !SaveData[i] )
 		{
 			for ( var j = 1; j <= 15; j++ )
@@ -1251,7 +1251,7 @@ function SaveCookie()
 	SaveData[29] = parseInt(formElements["A_head2"].value);
 	SaveData[30] = parseInt(formElements["A_head2_card"].value);
 	SaveData[31] = parseInt(formElements["A_head3"].value);
-	
+
 	SaveData[32] = parseInt(formElements["A_HSE_HEAD1"].value);
 	SaveData[33] = parseInt(formElements["A_left"].value);
 	SaveData[34] = parseInt(formElements["A_left_card"].value);
@@ -1305,7 +1305,7 @@ function SaveCookie()
 	SaveData[86] = parseInt(formElements["A_LEFT_DEF_PLUS"].value);
 	SaveData[87] = parseInt(formElements["A_SHOULDER_DEF_PLUS"].value);
 	SaveData[88] = parseInt(formElements["A_SHOES_DEF_PLUS"].value);
-	
+
 	for ( var i = 0; i <= 88; i++ )
 	{
 		//window.console.log( i );
@@ -1329,7 +1329,7 @@ function SaveCookie()
 	}
 	document.cookie = cookieNum + "=" + wStr + "; expires=" + expDay;
 	var cookie = document.cookie.split(";");
- 
+
 	cacheCookieNum = cookieNum;
 	LoadCookie3();
 	formElements["saveList"].value = cacheCookieNum;
@@ -1345,7 +1345,7 @@ function SaveCookieConf()
 	wCookie.setTime(wCookie.getTime()+(wDay*1000*60*60*24));
 	expDay = wCookie.toGMTString();
 
-	
+
 	wStr = "a" + NtoS2(eval(document.calcForm.Conf01.value),2) + "00000";
 
 	document.cookie = "ConfData" +"="+ wStr +"; expires="+ expDay;
@@ -1354,7 +1354,7 @@ function SaveCookieConf()
 function URLOUT()
 { // Stats to URL
 	var formElements = document.forms["calcForm"].elements;
-	
+
 	calc();
 	SaveData = new Array();
 
@@ -1433,41 +1433,40 @@ function URLOUT()
 	var count = 0;
 	while ( JobSkillPassOBJ[n_A_JOB][count] !== 999 )
 	{
-		var value = parseInt( formElements["A_Skill" + count].value );			
+		var value = parseInt( formElements["A_Skill" + count].value );
 		SaveData[47 + count] = NtoS2( value, 1 );
 		count++;
 	}
 	SaveData[46] = NtoS2( count, 1 ); // amount
 
 	var index = 47 + count;
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_STR.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_AGI.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_INT.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_VIT.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_DEX.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_LUK.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_ATK.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_ATK_PERC.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_MATK.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_MATK_PERC.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_HIT.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_FLEE.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_DODGE.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_HP.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_SP.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_HP_PERC.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_SP_PERC.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_RANGED.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_DEF.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_MDEF.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_CRIT.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_RED_PERC.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_ASPD.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_ASPD_PERC.value), 1 );
-	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_CASTING.value), 1 );
-	
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_STR.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_AGI.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_INT.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_VIT.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_DEX.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_LUK.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_ATK.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_ATK_PERC.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_MATK.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_MATK_PERC.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_HIT.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_FLEE.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_DODGE.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_HP.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_SP.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_HP_PERC.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_SP_PERC.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_RANGED.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_DEF.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_MDEF.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_CRIT.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_RED_PERC.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_ASPD.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_ASPD_PERC.value), 2 );
+	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_CASTING.value), 2 );
 	// Acolyte Buffs
-	
+
 	/*for ( var i = 0; i < ksAcolyteBuffCount && acolyteBuffs[i] === 0; i++ );
 	if ( i === ksAcolyteBuffCount )
 	{ // no buffs
@@ -1498,7 +1497,7 @@ function URLOUT()
 	{
 		SaveData[index+3] = NtoS2(eval(SkillSubNum.value),3);
 	}
-	
+
 	SaveData[index+4] = NtoS2(n_B[en_ID],2);
 	index+=4;
 
@@ -1545,23 +1544,23 @@ function URLOUT()
 	for(var i=0;i<=36 && performerBuffs[i]==0;i++);
 	if(i!=37)
 		checkHIT[0] = 1;
-		
+
 	for(i=0;i<=4 && performerBuffs[40+i]==0;i++);
 	if(i!=5)
 		checkHIT[1] = 1;
-		
+
 	for(i=0;i<=5 && battleChantBuffs[i]==0;i++);
 	if(i!=6)
 		checkHIT[2] = 1;
-		
+
 	for(i=0;i<=6 && otherBuffs[i]==0;i++);
 	if(i!=7)
 		checkHIT[3] = 1;
-		
+
 	for(i=0;i<=15 && usableItems[i]==0;i++);
 	if(i!=16)
 		checkHIT[4] = 1;
-		
+
 	SaveData[index] = NtoS01(checkHIT[0],checkHIT[1],checkHIT[2],checkHIT[3],checkHIT[4]);
 
 	if ( checkHIT[0] )
@@ -1645,12 +1644,13 @@ function URLOUT()
 	index+=1;
 	SaveData[index+1] = NtoS2(eval(document.calcForm.A_HSE_HEAD1.value),2);
 	index+=1;*/
-	
-	wStr = "" + SaveData[0];
-	for ( var i = 1; i <= index; i++ )
-	{
-		wStr += "" + SaveData[i];
-	}
+
+	wStr = SaveData.slice(0, index + 1).join('');
+	// wStr = "" + SaveData[0];
+	// for ( var i = 1; i <= index; i++ )
+	// {
+	// 	wStr += "" + SaveData[i];
+	// }
 	var w = location.href.split("?");
 	formElements["URL_TEXT"].value = w[0] + "?" + wStr;
 }
@@ -1660,7 +1660,7 @@ function URLIN()
 with( document.calcForm )
 {
 	var formElements = document.forms["calcForm"].elements;
-	
+
 	var r = /\?/;
 	var w = location.href.match(r);
 	if ( w )
@@ -1746,32 +1746,58 @@ with( document.calcForm )
 			formElements["A_Skill" + i].value = StoN2(w.substr(81+i,1));
 		}
 
-		var index = max;
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_STR.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_AGI.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_INT.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_VIT.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_DEX.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_LUK.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_ATK.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_ATK_PERC.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_MATK.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_MATK_PERC.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_HIT.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_FLEE.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_DODGE.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_HP.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_SP.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_HP_PERC.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_SP_PERC.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_RANGED.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_DEF.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_MDEF.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_CRIT.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_RED_PERC.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_ASPD.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_ASPD_PERC.value = StoN2(w.substr(81+(index++),1));
-		if (!(StoN2(w.substr(81+(index),1))===undefined)) document.calcForm.E_BOOST_CASTING.value = StoN2(w.substr(81+(index++),1));
+		var index = max, tmp_fragment = undefined;
+
+		tmp_fragment = StoN2(w.substr(81+(index),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_STR.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_AGI.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_INT.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_VIT.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_DEX.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_LUK.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_ATK.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_ATK_PERC.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_MATK.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_MATK_PERC.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_HIT.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_FLEE.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_DODGE.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_HP.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_SP.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_HP_PERC.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_SP_PERC.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_RANGED.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_DEF.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_MDEF.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_CRIT.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_RED_PERC.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_ASPD.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_ASPD_PERC.value = tmp_fragment;
+		tmp_fragment = StoN2(w.substr(81+(index+=2),2), 2);
+		if (!(tmp_fragment===undefined)) document.calcForm.E_BOOST_CASTING.value = tmp_fragment;
 		StCalc();
 		/*var x = 81 + max;
 		if(StoN2(w.substr(x,1)) == 1)
@@ -2203,7 +2229,7 @@ function ShortCutNameChange(num){
 			}
 		}
 	}
-	
+
 	var wstr = "";
 	for(var i=0;i<=3;i++)
 	{
@@ -2217,7 +2243,7 @@ function ShortCutNameChange(num){
 function TempSaveActual()
 { // Stats to URL
 	var formElements = document.forms["calcForm"].elements;
-	
+
 	calc();
 	SaveData = new Array();
 
@@ -2296,7 +2322,7 @@ function TempSaveActual()
 	var count = 0;
 	while ( JobSkillPassOBJ[n_A_JOB][count] !== 999 )
 	{
-		var value = parseInt( formElements["A_Skill" + count].value );			
+		var value = parseInt( formElements["A_Skill" + count].value );
 		SaveData[47 + count] = NtoS2( value, 1 );
 		count++;
 	}
@@ -2328,7 +2354,7 @@ function TempSaveActual()
 	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_ASPD.value), 1 );
 	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_ASPD_PERC.value), 1 );
 	SaveData[index++] = NtoS2( parseInt(document.calcForm.E_BOOST_CASTING.value), 1 );
-	
+
 	wStr = "" + SaveData[0];
 	for ( var i = 1; i <= index; i++ )
 	{
