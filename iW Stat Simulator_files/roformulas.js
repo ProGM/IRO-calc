@@ -616,6 +616,12 @@ function CalcEquipAtk()
 			equipmentAttack += 50;
 		}
 	}
+	if ( EquipNumSearch( 1554 ) )
+	{ // Glove of sura
+		if (SU_STR >= 120) {
+			equipmentAttack += 30;
+		}
+	}
 
 	// Skills
 	if( SkillSearch( skill_GS_LAST_STAND ) )
