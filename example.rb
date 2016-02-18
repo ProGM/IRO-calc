@@ -1,0 +1,1 @@
+ruby add_item.rb ciao ciao ciao "{ bonus bMaxHPrate,5; bonus bMaxSPrate,5; .@r = getrefine(); bonus bAllStats,1; bonus5 bAutoSpell,"AC_CONCENTRATION",10,(5+.@r)*5,BG_WEAPON,0; bonus5 bAutoSpell,"AC_DOUBLE",10,(5+.@r)*5,BG_WEAPON,1; bonus5 bAutoSpell,"AC_CHARGEARROW",10,(5+.@r)*5,BG_WEAPON,0; }"
