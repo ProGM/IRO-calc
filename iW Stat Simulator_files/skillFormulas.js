@@ -55,7 +55,8 @@ var RANGED_SKILLS = [
     skill_SHA_TRIANGLE_SHOT,
     skill_KAG_CROSS_STRIKE,
     skill_KAG_HUUMA_SHURIKEN_STRIKE,
-    skill_GEN_HALLUCINATION_DRUG
+    skill_GEN_HALLUCINATION_DRUG,
+    skill_RUN_DRAGON_BREATH
 ];
 var MAGICAL_SKILLS = [
     skill_MON_DARK_STRIKE,
@@ -127,7 +128,7 @@ var MAGICAL_SKILLS = [
 function clashingATKFormula(weight)
 {
 	CalcAtk();
-	
+
 	// for damage calculation
 	var tempAttack = (weight + equipmentAttack + n_A_Weapon_ATK + weaponUpgradeAttack + overrefineAttack + strengthBonusAttack) * element[n_B[en_ELEMENT]][n_A_Weapon_element] / 100 * 0.8;
 	// multiply race mod
@@ -173,7 +174,7 @@ function CalcSkillDamageType() {
 		else
 			damageType = kDmgTypeMelee;
 	}
-			
+
 
 }
 function CalcSkillDamage()
@@ -217,7 +218,7 @@ function CalcSkillDamage()
 	{ // Melee Attack
 		damageType = kDmgTypeMelee;
 	}
-	
+
 	// Fight!!!
 	if ( n_A_ActiveSkill == skill_ALL_BASIC_ATTACK ||
 		 ( n_A_ActiveSkill == skill_AS_POISON_REACT &&
@@ -226,11 +227,11 @@ function CalcSkillDamage()
 	{
 		// Get other ATK Mods and apply to crit.
 		CalcAtkMods02( w_SkillMod, 1 );
-		
+
 		// there is no fixed or variable cast time for basic attacks.
 		fixedCastTime = 0;
 		variableCastTime = 0;
-		
+
 		// Crit is a guarantee, calc it.
 		wCriTyuu=1;
 		for ( var i = 0; i < 3; i++ )
@@ -238,10 +239,10 @@ function CalcSkillDamage()
 			n_A_CriATK[i] = CalcFinalDamage( n_A_CriATK[i], 10 );
 		}
 		wCriTyuu=0;
-		
+
 		// Now display it.
 		DisplayCriticalDamage();
-		
+
 		if ( w998G > 0 )
 		{ // Normal Attack, Crit Damage is the highest possible damage.
 			n_Min_DMG = n_A_CriATK[0];
@@ -252,7 +253,7 @@ function CalcSkillDamage()
 		{ // Poison React gets a 1 second delay.
 			n_Delay[ksDelayA] = 1;
 		}
-	
+
 		if ( n_Nitou )
 		{ // dual handed
 			// Local Variables
@@ -267,14 +268,14 @@ function CalcSkillDamage()
 				lefthandAttack[i] = ApplyEnemyDefense( lefthandAttack[i] * w_SkillMod, i, 0 );
 				lefthandAttack[i] = tPlusDamCut( lefthandAttack[i] );
 			}
-			
+
 			// Adjust Minimum and Maximum Damage
 			n_Min_DMG += lefthandAttack[0];
 			n_Max_DMG += lefthandAttack[2];
 
 			// Calc final damage
 			w_DMG[0] = CalcFinalDamage( n_A_DMG[0], 0 );
-			
+
 			// Post data to form
 			var wX = w_DMG[0];
 			Last_DMG_A[0] = Last_DMG_B[0] = wX + lefthandAttack[0];
@@ -309,7 +310,7 @@ function CalcSkillDamage()
 			var wX = w_DMG[1];
 			Last_DMG_A[1] = Last_DMG_B[1] = wX + lefthandAttack[1];
 			InnStr[1] += wX +" + "+ lefthandAttack[1];
-			
+
 			w_DMG[1] = CalcRightHandDamage( w_DMG[1] );
 			w_DMG[1] += CalcLeftHandDamage( lefthandAttack[1] );
 
@@ -329,7 +330,7 @@ function CalcSkillDamage()
 			{
 				hunterPet = CalcFalconDamage();
 			}
-			
+
 			trifectaBlowDamage = 0;
 			var trifectaDamage = [0,0,0]; // min, ave, max
 
@@ -338,25 +339,25 @@ function CalcSkillDamage()
 				var trifectaBlowLevel = SkillSearch( skill_MO_RAGING_TRIFECTA_BLOW );
 				var trifectaBlowSkillMod = 1.0 + trifectaBlowLevel * 0.2;
 				trifectaBlowDamage = -1;
-				
+
 				// Calculate Min, Ave, and Max damage
 				for ( var i = 0; i <= 2; i++ )
 				{
 					trifectaDamage[i] = CalcFinalDamage( n_A_DMG[i] * trifectaBlowSkillMod, i );
 					trifectaDamage[i] = Math.floor( trifectaDamage[i] / 3 ) * 3;
-					
+
 					// On plant monster
 					if ( n_B[en_BOSS] === 5 )
 					{
 						trifectaDamage[i] = 3;
 					}
 				}
-				
+
 				// Build Label to display damage
 				str_bSUBname += "Raging Trifecta Blow Damage<BR>";
 				str_bSUB += trifectaDamage[0] + "~" + trifectaDamage[2] + " (" + ( 30 - trifectaBlowLevel ) + "% Chance)<BR>";
 				trifectaBlowDamage = 0;
-				
+
 				// Cap Min and Max Damage
 				if ( n_Min_DMG > trifectaDamage[0] )
 				{
@@ -397,18 +398,18 @@ function CalcSkillDamage()
 			{
 				var giantGrowthSkillMod = 3.0;
 				trifectaBlowDamage = -1;
-				
+
 				// Calculate Min, Ave, and Max damage
 				for ( var i = 0; i <= 2; i++ )
 				{
 					trifectaDamage[i] = CalcFinalDamage( n_A_DMG[i] * giantGrowthSkillMod, i );
 				}
-				
+
 				// Build Label to display damage
 				str_bSUBname += "Giant Growth Damage<br/>";
 				str_bSUB += trifectaDamage[0] + "~" + trifectaDamage[2] + " (15% Chance)<br/>";
 				trifectaBlowDamage = 0;
-				
+
 				// Cap Min and Max Damage
 				if ( n_Min_DMG > trifectaDamage[0] )
 				{
@@ -419,7 +420,7 @@ function CalcSkillDamage()
 					n_Max_DMG = trifectaDamage[2];
 				}
 			}
-			
+
 			if ( n_A_WeaponType == weapTyp_BOW && SkillSearch( skill_RAN_FEAR_BREEZE ) )
 			{
 				var breezeLevel = SkillSearch( skill_RAN_FEAR_BREEZE );
@@ -431,7 +432,7 @@ function CalcSkillDamage()
 				}
 				var aveBreezeAttacks = ( minBreezeAttacks + maxBreezeAttacks ) / 2.0;
 				var breezeChance = 12;
-				
+
 				if ( breezeLevel === 3 )
 				{
 					breezeChance += 9;
@@ -444,17 +445,17 @@ function CalcSkillDamage()
 				{
 					breezeChance += 18;
 				}
-				
+
 				// Calculate Min, Ave, and Max damage
 				trifectaDamage[0] = CalcFinalDamage( n_A_DMG[0] * minBreezeAttacks, 0 );
 				trifectaDamage[1] = CalcFinalDamage( n_A_DMG[1] * aveBreezeAttacks, 1 );
 				trifectaDamage[2] = CalcFinalDamage( n_A_DMG[2] * maxBreezeAttacks, 2 );
-				
+
 				// Build Label to display damage
 				str_bSUBname += "Fear Breeze Damage<br/>";
 				str_bSUB += trifectaDamage[0] + "~" + trifectaDamage[2] + " (" + breezeChance + "% Chance)<br/>";
 				trifectaBlowDamage = 0;
-				
+
 				// Cap Min and Max Damage
 				if ( n_Min_DMG > trifectaDamage[0] )
 				{
@@ -465,7 +466,7 @@ function CalcSkillDamage()
 					n_Max_DMG = trifectaDamage[2];
 				}
 			}
-			
+
 			// Enchant Blade goes here?
 			if ( SkillSearch( skill_RUN_ENCHANT_BLADE ) )
 			{
@@ -474,7 +475,7 @@ function CalcSkillDamage()
 					n_A_DMG[i] += ( SkillSearch( skill_RUN_ENCHANT_BLADE ) * 20 + 100 ) * ( n_A_BaseLV / 150.0 ) + n_A_INT;
 				}
 			}
-			
+
 			// Get other ATK Mods and apply to working damage.
 			CalcAtkMods02( w_SkillMod , 0 );
 
@@ -544,7 +545,7 @@ function CalcSkillDamage()
 			{
 				n_Max_DMG = wX;
 			}
-			
+
 			if ( w998D )
 			{ // Double Attack
 				var wX = ( w_DMG[2] + w_KATARU[2] ) * 2;
@@ -555,7 +556,7 @@ function CalcSkillDamage()
 					n_Max_DMG = wX;
 				}
 			}
-			
+
 			w_DMG[2] = n_Max_DMG;
 
 			// Determine true ave damage
@@ -566,14 +567,14 @@ function CalcSkillDamage()
 			{
 				InnStr[1] = Last_DMG_A[1] + " (" + Last_DMG_B[1] + "+" + w_KATARU[1] + ")";
 			}
-			
+
 			if ( SkillSearch( skill_MO_RAGING_TRIFECTA_BLOW ) ||
 				 SkillSearch( skill_RUN_GIANT_GROWTH ) ||
 				 SkillSearch( skill_RAN_FEAR_BREEZE ) )
 			{
 				trifectaBlowDamage = trifectaDamage[1];
 			}
-			
+
 			w_DMG[1] += katarOffhandDamage;
 			w_DMG[1] = CalcRightHandDamage( w_DMG[1] );
 			w_DMG[1] += hunterPet;
@@ -591,7 +592,7 @@ function CalcSkillDamage()
 			damageType = kDmgTypeRanged;
 			w_SkillMod += ( 1 + 0.5 * n_A_ActiveSkillLV );
 			myInnerHtml( "CRInum", ( Math.round( w998G * 100 ) / 100 ) + SubName[0][Language], 0 );
-			
+
 			fixedCastTime *= 0.0;
 			if ( EquipNumSearch( 1306 ) && n_A_Weapon_ATKplus >= 10 )
 			{ // Little Feather Hat + Falken Blitz
@@ -609,7 +610,7 @@ function CalcSkillDamage()
 			damageType = kDmgTypeMelee;
 			w_SkillMod += ( n_A_ActiveSkillLV - 1 );
 			myInnerHtml( "CRInum", ( Math.round( w998G * 100 ) / 100 ) + SubName[0][Language], 0 );
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 0.0;
@@ -776,7 +777,7 @@ function CalcSkillDamage()
 		if ( n_A_ActiveSkill === skill_SW_BASH )
 		{
 			w_SkillMod += n_A_ActiveSkillLV * 0.3;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
@@ -784,7 +785,7 @@ function CalcSkillDamage()
 		{
 			w_SkillMod += n_A_ActiveSkillLV * 0.2;
 			n_A_Weapon_element = ele_FIRE;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 2.0;
@@ -794,7 +795,7 @@ function CalcSkillDamage()
 			not_use_card = 1;
 			w_SkillMod += 0.3;
 			n_A_Weapon_element = ele_EARTH;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
@@ -802,7 +803,7 @@ function CalcSkillDamage()
 		{
 			damageType = kDmgTypeRanged;
 			w_SkillMod += n_A_ActiveSkillLV *0.05 - 0.25; // update to RE !
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -811,14 +812,14 @@ function CalcSkillDamage()
 		{
 			damageType = kDmgTypeRanged;
 			w_SkillMod += 0.5;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 1.5;
 		}
 		else if ( n_A_ActiveSkill === skill_ME_MAMMONITE )
 		{
 			w_SkillMod += n_A_ActiveSkillLV *0.5;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
@@ -826,7 +827,7 @@ function CalcSkillDamage()
 		{
 			damageType = kDmgTypeRanged;
 			w_SkillMod += n_A_ActiveSkillLV *0.2;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
@@ -837,14 +838,14 @@ function CalcSkillDamage()
 				damageType = kDmgTypeRanged;
 			}
 			w_SkillMod += 0.2 * n_A_ActiveSkillLV;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
 		else if(n_A_ActiveSkill==skill_CR_SMITE)
 		{
 			w_SkillMod += n_A_ActiveSkillLV * 0.2;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
@@ -852,14 +853,14 @@ function CalcSkillDamage()
 		{
 			w_SkillMod += n_A_ActiveSkillLV *0.35;
 			n_A_Weapon_element = ele_HOLY;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
 		else if(n_A_ActiveSkill==skill_RG_SIGHTLESS_MIND)
 		{
 			w_SkillMod += n_A_ActiveSkillLV *0.4;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
@@ -867,7 +868,7 @@ function CalcSkillDamage()
 		{
 			w_SkillMod += n_A_ActiveSkillLV *0.5;
 			damageType = kDmgTypeRanged;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -879,7 +880,7 @@ function CalcSkillDamage()
 			else if(n_A_ActiveSkillLV >= 7)w_SkillMod += w+w/2+w/4-1;
 			else if(n_A_ActiveSkillLV >= 4)w_SkillMod += w+w/2-1;
 			else w_SkillMod += w-1;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.7;
 		}
@@ -892,7 +893,7 @@ function CalcSkillDamage()
 			{ // half with edp on
 				w_SkillMod /= 2.0;
 			}
-			
+
 			if ( n_A_ActiveSkill == skill_AS_SONIC_BLOW_SL && PlayerVersusPlayer == 0 )
 			{
 				w_SkillMod *= 2;
@@ -913,7 +914,7 @@ function CalcSkillDamage()
 		{
 			not_use_card = 1;
 			n_A_Weapon_element = ele_WATER;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayA] = 1.0;
@@ -924,7 +925,7 @@ function CalcSkillDamage()
 			w_SkillMod += n_A_ActiveSkillLV *0.4 + 2;
 			w_HIT = 100;
 			w_HIT_HYOUJI = 100;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 0.5;
@@ -932,7 +933,7 @@ function CalcSkillDamage()
 		else if(n_A_ActiveSkill==skill_RG_GANK)
 		{
 			w_SkillMod += n_A_ActiveSkillLV * 0.3;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -941,7 +942,7 @@ function CalcSkillDamage()
 		{
 			wActiveHitNum = 4;
 			w_SkillMod += 0.5+n_A_ActiveSkillLV *0.5;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayA] = 1.0;
@@ -951,7 +952,7 @@ function CalcSkillDamage()
 		else if(n_A_ActiveSkill==skill_MO_RAGING_THRUST)
 		{
 			w_SkillMod += 1.4+n_A_ActiveSkillLV *0.6;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayA] = 1.0;
@@ -965,7 +966,7 @@ function CalcSkillDamage()
 			if(eval(document.calcForm.A_Weapon_element.value) != 0)
 				n_A_Weapon_element = eval(document.calcForm.A_Weapon_element.value);
 			damageType = kDmgTypeRanged;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 1.5;
 		}
@@ -976,7 +977,7 @@ function CalcSkillDamage()
 			w_SkillMod += n_A_ActiveSkillLV *0.2;
 			w_HIT = 100;
 			w_HIT_HYOUJI = 100;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 1.0;
 			n_Delay[ksDelayA] = 1.0;
@@ -985,7 +986,7 @@ function CalcSkillDamage()
 		{
 			damageType = kDmgTypeRanged;
 			w_SkillMod += n_A_ActiveSkillLV *0.4;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 0.5;
@@ -994,7 +995,7 @@ function CalcSkillDamage()
 		{
 			damageType = kDmgTypeRanged;
 			w_SkillMod += (n_A_ActiveSkillLV *0.1 -0.5);
-				
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			if ( n_A_ActiveSkillLV > 5 )
@@ -1010,7 +1011,7 @@ function CalcSkillDamage()
 		{
 			not_use_card = 1;
 			w_SkillMod += (n_A_ActiveSkillLV *0.4 -0.6);
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.5;
 			n_Delay[ksDelayGlobal] = 0.5;
@@ -1018,7 +1019,7 @@ function CalcSkillDamage()
 		else if(n_A_ActiveSkill==skill_CH_RAGING_PALM_STRIKE)
 		{
 			w_SkillMod += (1 + n_A_ActiveSkillLV);
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 0.3;
@@ -1026,7 +1027,7 @@ function CalcSkillDamage()
 		else if(n_A_ActiveSkill==skill_CH_GLACIER_FIST)
 		{
 			w_SkillMod += n_A_ActiveSkillLV -0.6;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayA] = 1.0;
@@ -1036,7 +1037,7 @@ function CalcSkillDamage()
 		else if (n_A_ActiveSkill==skill_CH_CHAIN_CRUSH_COMBO)
 		{
 			w_SkillMod += (3 + n_A_ActiveSkillLV);
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayA] = 1.0;
@@ -1077,14 +1078,14 @@ function CalcSkillDamage()
 			damageType = kDmgTypeRanged;
 			not_use_card = 1;
 			n_A_Weapon_element = ele_WIND;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
 		else if(n_A_ActiveSkill==skill_MON_PULSE_STRIKE)
 		{
 			w_SkillMod += (n_A_ActiveSkillLV -1) * 1;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
@@ -1094,7 +1095,7 @@ function CalcSkillDamage()
 			not_use_card = 1;
 			n_A_DMG[1] += Math.floor(14.5 * weaponSizeMod);
 			n_A_DMG[2] += Math.floor(29 * weaponSizeMod);
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
@@ -1103,7 +1104,7 @@ function CalcSkillDamage()
 			damageType = kDmgTypeRanged;
 			not_use_card = 1;
 			w_SkillMod += 0.5;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
@@ -1116,7 +1117,7 @@ function CalcSkillDamage()
 				baseCast = 1.5;
 			}
 			w_SkillMod += distance;
-				
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= baseCast;
 		}
@@ -1147,7 +1148,7 @@ function CalcSkillDamage()
 		{
 			not_use_card = 1;
 			w_SkillMod += Math.floor((eval(document.calcForm.SkillSubNum.value) / (16 - n_A_ActiveSkillLV) / 100 -1) * 100) /100;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
@@ -1155,14 +1156,14 @@ function CalcSkillDamage()
 		{
 			not_use_card = 1;
 			w_SkillMod += 2;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
 		else if(n_A_ActiveSkill==skill_TK_TORNADO_KICK || n_A_ActiveSkill==skill_TK_HEEL_DROP)
 		{
 			w_SkillMod += (0.6 + n_A_ActiveSkillLV * 0.2);
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayA] = 1.0;
@@ -1172,7 +1173,7 @@ function CalcSkillDamage()
 			w_SkillMod += (0.9 + n_A_ActiveSkillLV * 0.3);
 			if(n_A_ActiveSkill==skill_TK_COUNTER_KICK)
 				wActiveHitNum = 3;
-				
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayA] = 1.0;
@@ -1180,7 +1181,7 @@ function CalcSkillDamage()
 		else if(n_A_ActiveSkill==skill_TK_FLYING_KICK)
 		{
 			w_SkillMod += (-0.7 + n_A_ActiveSkillLV * 0.1);
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayA] = 1.0;
@@ -1191,7 +1192,7 @@ function CalcSkillDamage()
 				w_SkillMod += (n_A_BaseLV * 0.08 - 1);
 			else
 				w_SkillMod += (n_A_BaseLV * 0.04 - 1);
-				
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayA] = 1.0;
@@ -1199,7 +1200,7 @@ function CalcSkillDamage()
 		else if(n_A_ActiveSkill==skill_NIN_FLIP_TATAMI)
 		{
 			w_SkillMod += (n_A_ActiveSkillLV * 0.1);
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 3.0;
@@ -1207,7 +1208,7 @@ function CalcSkillDamage()
 		else if(n_A_ActiveSkill==skill_NIN_HAZE_SLASHER)
 		{
 			w_SkillMod += (n_A_ActiveSkillLV * 0.1);
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayA] = 1.0;
@@ -1222,7 +1223,7 @@ function CalcSkillDamage()
 			{
 				w_SkillMod += 4;
 			}
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.5;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -1233,7 +1234,7 @@ function CalcSkillDamage()
 			damageType = kDmgTypeRanged;
 			n_A_Weapon_element = ele_GHOST;
 			not_use_card = 1;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 0.5;
@@ -1244,7 +1245,7 @@ function CalcSkillDamage()
 			damageType = kDmgTypeRanged;
 			wActiveHitNum = 5;
 			w_SkillMod += n_A_ActiveSkillLV * 0.5 + 4;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 0.5;
@@ -1260,7 +1261,7 @@ function CalcSkillDamage()
 				w_HIT = 100;
 			}
 			w_HIT_HYOUJI = w_HIT;
-			
+
 			fixedCastTime *= 1.0 + 0.2 * n_A_ActiveSkillLV;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -1269,7 +1270,7 @@ function CalcSkillDamage()
 		else if ( n_A_ActiveSkill === skill_GS_DISARM )
 		{ // Disarm
 			damageType = kDmgTypeRanged;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 2.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -1281,7 +1282,7 @@ function CalcSkillDamage()
 			w_SkillMod += n_A_ActiveSkillLV *0.2;
 			w_HIT = 100;
 			w_HIT_HYOUJI = 100;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 1.5;
 			n_Delay[ksDelayGlobal] = 0.5;
@@ -1291,7 +1292,7 @@ function CalcSkillDamage()
 		{ // Crowd Control Shot
 			damageType = kDmgTypeMelee;
 			w_SkillMod += n_A_ActiveSkillLV *0.5;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 0.0;
@@ -1302,7 +1303,7 @@ function CalcSkillDamage()
 		{ // Full Blast
 			damageType = kDmgTypeRanged;
 			w_SkillMod += n_A_ActiveSkillLV * 1 + 2;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 1.0 + 0.2 * n_A_ActiveSkillLV;
@@ -1312,7 +1313,7 @@ function CalcSkillDamage()
 		{ // Spread Shot
 			damageType = kDmgTypeRanged;
 			w_SkillMod += n_A_ActiveSkillLV * 0.2 - 0.2;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 2.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -1322,7 +1323,7 @@ function CalcSkillDamage()
 		{
 			damageType = kDmgTypeRanged;
 			not_use_card = 1;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 1.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -1353,11 +1354,11 @@ function CalcSkillDamage()
 				performerBonus = 16;
 			}
 			damageType = kDmgTypeRanged;
-			
+
 			w_SkillMod = n_A_ActiveSkillLV * 2 + 4; // base mod
 			w_SkillMod *= n_A_BaseLV / 100.0; // level bonus
 			w_SkillMod += performerBonus; // performer count bonus
-			
+
 			fixedCastTime *= 0.5;
 			variableCastTime *= 1.8 + 0.2 * n_A_ActiveSkillLV;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -1367,12 +1368,12 @@ function CalcSkillDamage()
 		{
 			// 600%-1000% damage
 			w_SkillMod = n_A_ActiveSkillLV + 5.0;
-			
+
 			if ( n_A_BaseLV > 99 )
 			{
 				w_SkillMod *= 1 + ( n_A_BaseLV - 100 ) / 200.0;
 			}
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -1382,14 +1383,14 @@ function CalcSkillDamage()
 		{
 			// 150%-350% damage
 			w_SkillMod = ( n_A_ActiveSkillLV + 2 ) * 0.5 * n_A_BaseLV / 100.0;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayCooldown] = 2.0;
 		}
 		else if ( n_A_ActiveSkill === skill_RUN_IGNITION_BREAK )
 		{ // Ignition Break
-		
+
 			// Local variables
 			var distance = parseInt(formElements["SkillSubNum"].value);
 			var distanceMod = 0;
@@ -1406,15 +1407,15 @@ function CalcSkillDamage()
 			{ // far away 200%-1000% damage
 				distanceMod = 2.0;
 			}
-			
+
 			// ATK [{(Skill Level x DistanceMod) x (1 + [(Caster s Base Level - 100) / 100])}] %
 			w_SkillMod = ( n_A_ActiveSkillLV * distanceMod ) * n_A_BaseLV / 100.0;
-			
+
 			if ( n_A_Weapon_element === ele_FIRE )
 			{ // does more with fire element weapon
 				w_SkillMod += ( n_A_ActiveSkillLV * 1.0 );
 			}
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 1.0;
 			n_Delay[ksDelayGlobal] = 0.0;
@@ -1424,7 +1425,7 @@ function CalcSkillDamage()
 		{
 			// 50%-250% damage
 			w_SkillMod = ( n_A_ActiveSkillLV / 2.0 + ( SkillSearch( skill_KN_SPEAR_MASTERY ) / 10.0 ) ) * n_A_BaseLV / 150.0;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
@@ -1434,17 +1435,17 @@ function CalcSkillDamage()
 			var damage = parseInt(formElements["SkillSubNum"].value);
 			damage *= n_A_ActiveSkillLV * 5.0;
 			w_SkillMod = 1;
-			
+
 			// calc reflected damage
 			myInnerHtml( "CRIATKname", '<font color="#0000FF"><b>Reflected Damage</b></font>', 0 );
 			var damageOut = 0.7 * damage;
 			myInnerHtml( "CRIATK", '<font color="#0000FF"><b>' + damageOut + '</b></font>', 0 );
-			
+
 			// Calculate incoming damage
 			myInnerHtml( "CRInumname", '<font color="#FF0000"><b>Incoming Damage</b></font>', 0 );
 			var damageIn = 0.3 * damage;
 			myInnerHtml( "CRInum", '<font color="#FF0000"><b>' + damageIn + '</b></font>', 0 );
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 2.0;
@@ -1456,7 +1457,7 @@ function CalcSkillDamage()
 			var weaponAtk = ItemOBJ[n_A_Equip[eq_WEAPON]][itm_ATK];
 			var weaponWeight = ItemOBJ[n_A_Equip[eq_WEAPON]][itm_WEIGHT];
 			w_SkillMod = n_A_WeaponLV * ( n_A_Weapon_ATKplus + 6 ) + weaponAtk / 100.0 + weaponWeight / 100.0;
-			
+
 			fixedCastTime *= 1.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayCooldown] = 30.0;
@@ -1465,7 +1466,7 @@ function CalcSkillDamage()
 		{
 			// ((RuneMastery + (INT / 8)) * 100)%
 			w_SkillMod = SkillSearch( skill_KN_SPEAR_MASTERY ) + Math.floor( n_A_INT / 8 );
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 2.0;
 		}
@@ -1480,15 +1481,15 @@ function CalcSkillDamage()
 				weaponWeight = 1000;
 			}
 			w_SkillMod = ( n_A_ActiveSkillLV * 0.8 ) + 6 + ( ( 1000 - weaponWeight ) / 100.0 );
-			
+
 			if ( n_A_BaseLV > 99 )
 			{
 				w_SkillMod *= 1 + ( n_A_BaseLV - 100 ) / 200.0;
 			}
-			
+
 			// add in CS bonus damage?
 			w_SkillMod += clashingLevel / 5.0;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 1.1 - 0.1 * n_A_ActiveSkillLV;
 			n_Delay[ksDelayGlobal] = 0.5;
@@ -1537,15 +1538,15 @@ function CalcSkillDamage()
 		else if ( n_A_ActiveSkill === skill_GEN_CART_CANNON )
 		{
 			damageType = kDmgTypeRanged;
-			
+
 			// Old formula:  350% + (Skill Level)*50% + (Cart Remodeling Level)*Int/2%
 			// Old formula: w_SkillMod = ( 1.4 + n_A_ActiveSkillLV * 0.6 ) + ( SkillSearch( skill_GEN_CART_REMODELING ) * ( n_A_INT ) ) / 100.0;
 			// Current Wiki Formula: [(( Cart Remodeling Skill Level * 50 ) * ( INT / 40 )) + ( Cart Cannon Skill Level * 60 )] % ATK
-			
+
 			w_SkillMod = (((SkillSearch( skill_GEN_CART_REMODELING ) * 50) * ( n_A_INT / 40)) + (n_A_ActiveSkillLV * 60))/100
-			
+
 			//w_SkillMod *= n_A_BaseLV / 100.0;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.5 + 0.5 * n_A_ActiveSkillLV;
 			n_Delay[ksDelayGlobal] = 0.5;
@@ -1553,7 +1554,7 @@ function CalcSkillDamage()
 		else if ( n_A_ActiveSkill === skill_SUR_SKY_NET_BLOW )
 		{
 			var afterDragonCombo = formElements["SkillSubNum"].checked;
-			
+
 			// ATK [{(Skill Level x 80) + (Caster s AGI)} x Caster s Base Level / 100] %
 			// If used after Dragon Combo,
 			// ATK [{(Skill Level x 100) + (Caster s AGI) + 150} x Caster s Base Level / 100] %
@@ -1565,7 +1566,7 @@ function CalcSkillDamage()
 			{
 				w_SkillMod = ( n_A_ActiveSkillLV * 0.8 ) + ( n_A_AGI / 100.0 ) * n_A_BaseLV / 100.0;
 			}
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 0.5;
@@ -1573,7 +1574,7 @@ function CalcSkillDamage()
 		else if ( n_A_ActiveSkill === skill_SUR_EARTH_SHAKER )
 		{
 			var visible = formElements["SkillSubNum"].checked;
-			
+
 			// [(Skill Level x 50) x (Caster s Base Level / 100) + (Caster s INT x 2)] %
 			// On hidden targets,
 			// [(Skill Level x 150) x (Caster s Base Level / 100) + (Caster s INT x 3)] %
@@ -1585,7 +1586,7 @@ function CalcSkillDamage()
 			{
 				w_SkillMod = ( n_A_ActiveSkillLV * 1.5 ) * ( n_A_BaseLV / 100.0 ) + ( ( n_A_INT * 3 ) / 100.0 );
 			}
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 3.0;
@@ -1594,7 +1595,7 @@ function CalcSkillDamage()
 		{
 			var numSpheres = parseInt(formElements["SkillSubNum"].value);
 			damageType = kDmgTypeRanged;
-			
+
 			// ATK [{(Skill Level x 20) x Number of Spirit Spheres} x Base Level / 150] %
 			// If in Fury state,
 			// ATK [{(Fury Skill Level x 20) + (Rampage Blaster Skill Level x 20)} x Number of Spirit Spheres x Caster s Base Level / 120] %
@@ -1606,7 +1607,7 @@ function CalcSkillDamage()
 			{
 				w_SkillMod = ( n_A_ActiveSkillLV * 0.2 ) * numSpheres * n_A_BaseLV / 100.0;
 			}
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -1616,7 +1617,7 @@ function CalcSkillDamage()
 		{
 			var knockback = formElements["SkillSubNum"].checked;
 			damageType = kDmgTypeRanged;
-			
+
 			// ATK [(Skill Level x 100 + 500) x Caster s Base Level / 100] %
 			// Knockback bonus:
 			// ATK [(Skill Level x 150) + (1000 x Target s current weight / Maximum weight) + (Target s Base Level x 5) x (Caster s Base Level / 150)] %
@@ -1626,7 +1627,7 @@ function CalcSkillDamage()
 			{
 				w_SkillMod += ( n_A_ActiveSkillLV * 1.5 ) + ( 10 * 1 ) + ( n_B[en_LEVEL] * 5 / 100.0 ) * n_A_BaseLV / 150.0;
 			}
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -1635,7 +1636,7 @@ function CalcSkillDamage()
 		{ // Windmill
 			// ATK [(Caster s Base Level + Caster s DEX) x Caster s Base Level / 100] %
 			w_SkillMod = ( ( n_A_BaseLV + n_A_DEX ) / 100.0 ) * n_A_BaseLV / 100.0;
-				
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 1.0;
 			n_Delay[ksDelayGlobal] = 0.5;
@@ -1645,7 +1646,7 @@ function CalcSkillDamage()
 		{ // Howling Lion
 			// ATK [(Skill Level x 300) x Caster s Base Level / 150] %
 			w_SkillMod = n_A_ActiveSkillLV * 3.0 * n_A_BaseLV / 150.0;
-			
+
 			fixedCastTime *= 0.5;
 			variableCastTime *= 1.0;
 			n_Delay[ksDelayCooldown] = 10.0;
@@ -1658,11 +1659,11 @@ function CalcSkillDamage()
 			{
 				windBonus = 50 * n_A_ActiveSkillLV / 100.0;
 			}
-			
+
 			// ATK [{(Skill Level x 200) + Additional Damage} x Caster s Base Level / 100] %
 			// Additional damage (if using Wind Element weapon), (50 * Skill Level), else 0.
 			w_SkillMod = ( ( n_A_ActiveSkillLV * 2.0 ) + windBonus ) * n_A_BaseLV / 100.0;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= n_A_ActiveSkillLV;
 			n_Delay[ksDelayCooldown] = 1.0;
@@ -1671,7 +1672,7 @@ function CalcSkillDamage()
 		{ // Gentle Touch: Silence
 			// ATK [(Skill Level x 100 + Caster s DEX) x (Caster s Base Level / 100)] %
 			w_SkillMod = ( ( n_A_ActiveSkillLV * 1.0 ) + ( n_A_DEX / 100.0 ) ) * n_A_BaseLV / 100.0;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayCooldown] = 0.5 + 0.5 * n_A_ActiveSkillLV;
@@ -1695,10 +1696,10 @@ function CalcSkillDamage()
 			w_SkillMod = ( ( n_A_ActiveSkillLV * n_A_DEX ) + ( n_A_INT * 5 ) ) / 100.0;
 			w_SkillMod *= 1.5 + n_A_BaseLV / 100.0;
 			w_SkillMod *= SkillSearch( skill_RAN_RESEARCH_TRAP ) * 20 / 50.0;
-			
+
 			// doesn't miss
 			w_HIT_HYOUJI = 100;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
@@ -1706,7 +1707,7 @@ function CalcSkillDamage()
 		{
 			// 300% damage
 			w_SkillMod = 3.0;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -1715,7 +1716,7 @@ function CalcSkillDamage()
 		{
 			// 100% damage
 			w_SkillMod = 1.0;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 1.5;
@@ -1724,7 +1725,7 @@ function CalcSkillDamage()
 		{
 			// 100% damage
 			w_SkillMod = 1.0;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
@@ -1733,12 +1734,12 @@ function CalcSkillDamage()
 			// ATK [{(Skill Level x 100) + 300} x Caster's Base Level / 120]% + ATK [(AGI x 2) + (Caster's Job Level x 4)]%
 			w_SkillMod = ( n_A_ActiveSkillLV + 3.0 ) * n_A_BaseLV / 120.0;
 			w_SkillMod += ( ( n_A_AGI * 2 ) + ( n_A_JobLV * 4 ) ) / 100.0;
-			
+
 			if ( SkillSearch( skill_AX_ENCHANT_DEADLY_POISON ) )
 			{ // half with edp on
 				w_SkillMod /= 2.0;
 			}
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
@@ -1746,7 +1747,7 @@ function CalcSkillDamage()
 		{
 			// ATK [{(Skill Level x 50) + 50} x Caster's Base Level/100] %
 			w_SkillMod = ( ( n_A_ActiveSkillLV * 0.5 ) + 0.5 ) * n_A_BaseLV / 100.0;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 0.2;
@@ -1754,13 +1755,13 @@ function CalcSkillDamage()
 		else if ( n_A_ActiveSkill === skill_GLT_CROSS_RIPPER_SLASHER )
 		{
 			var counters = parseInt(formElements["SkillSubNum"].value);
-			
+
 			// Total Damage = A + B
 			// A = ATK [{(Skill Level x 80) + 400} x Caster's Base Level / 100] %
 			// B = ATK [(Rolling Cutter Counter x Caster's AGI)] %
 			w_SkillMod = ( ( n_A_ActiveSkillLV * 0.8 ) + 4 ) * n_A_BaseLV / 100.0;
 			w_SkillMod += ( counters * n_A_AGI ) / 100.0;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -1781,7 +1782,7 @@ function CalcSkillDamage()
 				spearBonusDamage += 0.03 * Math.floor( n_A_Weapon_ATKplus );
 				w_SkillMod *= spearBonusDamage;
 			}
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayCooldown] = 2.0;
@@ -1789,7 +1790,7 @@ function CalcSkillDamage()
 		else if ( n_A_ActiveSkill === skill_ROY_VANISHING_POINT )
 		{ // Banishing Point
 			var bashLevel = parseInt(formElements["SkillSubNum"].value);
-			
+
 			// ATK [{(Skill Level x 50) + (Caster s learned Bash Level x 30)} x Caster s Base Level / 100] %
 			w_SkillMod = ( ( n_A_ActiveSkillLV * 0.5 ) + ( bashLevel * 0.3 ) ) * n_A_BaseLV / 100.0;
 			if ( EquipNumSearch( 1269 ) )
@@ -1798,7 +1799,7 @@ function CalcSkillDamage()
 				spearBonusDamage += 0.03 * Math.floor( n_A_Weapon_ATKplus / 2 );
 				w_SkillMod *= spearBonusDamage;
 			}
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
@@ -1806,7 +1807,7 @@ function CalcSkillDamage()
 		{
 			// ATK [{(Skill Level x 100) + (Caster s AGI x 5)} x Caster s Base Level / 120] %
 			w_SkillMod = ( n_A_ActiveSkillLV + ( n_A_AGI * 5 / 100.0 ) ) * n_A_BaseLV / 100.0;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -1820,10 +1821,10 @@ function CalcSkillDamage()
 			{
 				currentHP = 1;
 			}
-			
+
 			// ATK [{(Number of Spirit Spheres x 200) + <(Caster s Max HP - Current HP) / 100>} x Caster s Base Level / 100] %
 			w_SkillMod = ( ( rageCounter * 2 ) + ( n_A_MaxHP - currentHP ) / 100.0 ) * n_A_BaseLV / 100.0;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 3.0;
@@ -1832,7 +1833,7 @@ function CalcSkillDamage()
 		{
 			// ATK [{(Caster s Base Level x 4) + (Shield DEF x 10)} + (Caster s VIT x 2)] %
 			w_SkillMod = ( n_A_BaseLV * 4 + ItemOBJ[n_A_Equip[eq_SHIELD]][itm_DEF] * 10 + n_A_VIT * 2 ) / 100.0;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 1.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -1845,7 +1846,7 @@ function CalcSkillDamage()
 			console.log(weaponLevel*weaponWeight*n_A_BaseLV/100.0);
 			// ATK [{(Skill Level x 100) + (Caster s Job Level x 10)} + (Weapon Weight x Weapon Level) x (Caster s Base Level / 100)] %
 			w_SkillMod = ( ( n_A_ActiveSkillLV + ( n_A_JobLV * 10 / 100.0 ) ) + ( ( weaponWeight * weaponLevel ) ) * (n_A_BaseLV / 100.0) / 100.0 );
-			
+
 			// Crit is a guarantee, calc it.
 			wCriTyuu=1;
 			for ( var i = 0; i < 3; i++ )
@@ -1853,7 +1854,7 @@ function CalcSkillDamage()
 				n_A_CriATK[i] = Math.floor(CalcFinalDamage( n_A_CriATK[i], 10 )*w_SkillMod);
 			}
 			wCriTyuu=0;
-			
+
 			DisplayCriticalDamage();
 			fixedCastTime *= 0.0;
 			variableCastTime *= 4.5 + 0.5 * n_A_ActiveSkillLV;
@@ -1862,11 +1863,11 @@ function CalcSkillDamage()
 		else if ( n_A_ActiveSkill === skill_ROY_OVERBRAND )
 		{
 			var numHits = parseInt(formElements["SkillSubNum"].value);
-			
+
 			// Deals Pierce Damage to targets up to 7 cells infront of the Caster.
 			// ATK [{(Skill Level x 200) + (Spear Quicken Skill Level x 50)} x Caster s Base Level / 100] %
 			w_SkillMod = ( ( n_A_ActiveSkillLV * 2 ) + ( SkillSearch( skill_CR_SPEAR_QUICKEN ) * .5 ) ) * n_A_BaseLV / 100.0;
-			
+
 			if ( numHits >= 2 )
 			{ // Deals Swing Damage to targets in 5x2 cell infront of the Caster.
 			  // ATK [{(Skill Level x 100) + (Caster s STR + DEX)} x Caster s Base Level / 100] %
@@ -1878,7 +1879,7 @@ function CalcSkillDamage()
 			  	var randomNumber = Math.floor( Math.random() * 91 ) + 10;
 				w_SkillMod += ( ( n_A_ActiveSkillLV ) + ( randomNumber / 100.0 ) );
 			}
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.5;
 			n_Delay[ksDelayGlobal] = 2.0;
@@ -1886,7 +1887,7 @@ function CalcSkillDamage()
 		else if ( n_A_ActiveSkill === skill_ROY_OVERBRAND_OLD )
 		{
 			var numHits = parseInt(formElements["SkillSubNum"].value);
-			
+
 			// From RG compilation thread: http://forums.irowiki.org/showpost.php?p=644548&postcount=3366
 			//Suggested formula:
 			//First hit:
@@ -1897,10 +1898,10 @@ function CalcSkillDamage()
 			//[Atk]*[200%*(skill level) + 2%*(Str+Dex)/3]*(base level)/100 ***Times 2%? or times 2?***
 			//Third hit:
 			//[Atk]*[160%*(skill level)]*(base level)/100
-			
+
 			// Deals Pierce Damage to targets up to 7 cells infront of the Caster.
 			w_SkillMod = ( ( n_A_ActiveSkillLV * 8.0 / 3.0 ) + ( SkillSearch( skill_CR_SPEAR_QUICKEN ) / 3.0 ) ) * n_A_BaseLV / 100.0;
-			
+
 			if ( numHits >= 2 )
 			{ // Deals Swing Damage to targets in 5x2 cell infront of the Caster.
 				w_SkillMod += ( n_A_ActiveSkillLV * 2.0 + ( 0.02 * ( n_A_STR + n_A_DEX ) / 3.0 ) ) * n_A_BaseLV / 100.0;
@@ -1910,7 +1911,7 @@ function CalcSkillDamage()
 			  	var randomNumber = Math.floor( Math.random() * 91 ) + 10;
 				w_SkillMod += ( n_A_ActiveSkillLV * 1.6 ) * n_A_BaseLV / 100.0;
 			}
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.5;
 			n_Delay[ksDelayGlobal] = 2.0;
@@ -1919,7 +1920,7 @@ function CalcSkillDamage()
 		{
 			// ATK [{(Skill Level x 120) + (Overbrand Skill Level x 80)} x Caster s Base Level / 100] %
 			w_SkillMod = ( ( n_A_ActiveSkillLV * 1.2 ) + ( SkillSearch( skill_ROY_OVERBRAND ) * .8 ) ) * n_A_BaseLV / 100.0;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 1.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -1928,10 +1929,10 @@ function CalcSkillDamage()
 		else if ( n_A_ActiveSkill === skill_ROY_EARTH_DRIVE )
 		{
 			var shieldWeight = ItemOBJ[n_A_Equip[eq_SHIELD]][itm_WEIGHT];
-			
+
 			// ATK [{(Skill Level + 1) x Shield Weight} x Caster s Base Level / 100] %
 			w_SkillMod = ( ( n_A_ActiveSkillLV + 1 ) * shieldWeight / 100.0 ) * n_A_BaseLV / 100.0;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 1.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -1940,13 +1941,13 @@ function CalcSkillDamage()
 		else if ( n_A_ActiveSkill === skill_MEC_AXE_BOOMERANG )
 		{ // Axe Boomerang
 			var axeWeight = ItemOBJ[n_A_Equip[eq_WEAPON]][itm_WEIGHT];
-			
+
 			// ATK [ { ( Skill Level x 50 ) + 250 + Axe Weight } x Caster s Base Level / 100 ] %
 			if ( n_A_WeaponType == weapTyp_AXE || n_A_WeaponType == weapTyp_AXEII )
 			{
 				w_SkillMod = ( ( n_A_ActiveSkillLV * 0.5 ) + 2.5 + ( axeWeight / 100.0 ) ) * n_A_BaseLV / 100.0;
 			}
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayCooldown] = 5.5 - 0.5 * n_A_ActiveSkillLV;
@@ -1957,7 +1958,7 @@ function CalcSkillDamage()
 			// Bonus ATK = { ( Caster s STR + DEX ) x Caster s Base Level / 100 }
 			var bonusAttack = ( ( n_A_STR + n_A_DEX ) / 100.0 ) * n_A_BaseLV / 100.0;
 			w_SkillMod = ( ( n_A_ActiveSkillLV * 1.0 ) + 3.0 ) + bonusAttack;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -1966,7 +1967,7 @@ function CalcSkillDamage()
 		{
 			// ATK [ { ( Skill Level x 100 ) + 200 + (Caster s DEX) } x Caster s Base Level / 120 ] %
 			w_SkillMod = ( n_A_ActiveSkillLV + 2.0 + n_A_DEX / 100.0 ) * n_A_BaseLV / 120.0;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.2 * n_A_ActiveSkillLV;
 		}
@@ -1974,7 +1975,7 @@ function CalcSkillDamage()
 		{
 			// ATK [ { ( Skill Level x 100 ) + 300 + Caster s STR } x Caster s Base Level / 100 ] %
 			w_SkillMod = ( n_A_ActiveSkillLV + 3.0 + n_A_STR / 100.0 ) * n_A_BaseLV / 100.0;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 2.0;
@@ -1984,7 +1985,7 @@ function CalcSkillDamage()
 		{
 			// ATK [ { ( Skill Level x 70 ) + Caster s DEX } x Caster s Base Level / 120 ] %
 			w_SkillMod = ( n_A_ActiveSkillLV * 0.7 + n_A_DEX / 100.0 ) * n_A_BaseLV / 120.0;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 0.4 - 0.1 * n_A_ActiveSkillLV;
@@ -1996,7 +1997,7 @@ function CalcSkillDamage()
 			// Large Monster:  ATK [ { ( Skill Level x 300 ) + 300 } x Caster s Base Level / 120 ] %
 			var sizeModifier = 4.0 - n_B[en_SIZE] * 0.5;
 			w_SkillMod = ( ( n_A_ActiveSkillLV * sizeModifier ) + 3.0 ) * n_A_BaseLV / 120.0;
-			
+
 			fixedCastTime *= 0.8 - 0.2 * n_A_ActiveSkillLV;
 			variableCastTime *= 1.2 + 0.2 * n_A_ActiveSkillLV;
 			n_Delay[ksDelayGlobal] = 0.5 * n_A_ActiveSkillLV;
@@ -2010,7 +2011,7 @@ function CalcSkillDamage()
 			// ATK [ { ( Skill Level x 300 ) + 300 } x Caster s Base Level / 150 ] %
 			n_A_Weapon_element = ele_FIRE;
 			w_SkillMod = ( n_A_ActiveSkillLV * 3.0 + 3.0 ) * n_A_BaseLV / 150.0;
-			
+
 			fixedCastTime *= 0.5;
 			variableCastTime *= 0.5 * n_A_ActiveSkillLV;
 			n_Delay[ksDelayGlobal] = 2.0 - 0.5 * n_A_ActiveSkillLV;
@@ -2020,7 +2021,7 @@ function CalcSkillDamage()
 			// ATK [ { ( Skill Level x 300 ) + 300 } x Caster s Base Level / 150 ] %
 			n_A_Weapon_element = ele_WATER;
 			w_SkillMod = ( n_A_ActiveSkillLV * 3.0 + 3.0 ) * n_A_BaseLV / 150.0;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 1.0;
 			n_Delay[ksDelayGlobal] = 1.0 * n_A_ActiveSkillLV;
@@ -2028,7 +2029,7 @@ function CalcSkillDamage()
 		else if ( n_A_ActiveSkill === skill_GLT_DARK_CLAW )
 		{
 			w_SkillMod = 1 * n_A_ActiveSkillLV;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 0.4 - 0.1 * n_A_ActiveSkillLV;
@@ -2036,7 +2037,7 @@ function CalcSkillDamage()
 		else if ( n_A_ActiveSkill === skill_GEN_HALLUCINATION_DRUG )
 		{
 			w_SkillMod = 1;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 0.4 - 0.1 * n_A_ActiveSkillLV;
@@ -2073,7 +2074,7 @@ function CalcSkillDamage()
 		}
 		n_PerHIT_DMG = ApplyDamageModifiers(0)+n_A_WeaponLV_seirenATK;
 		w_DMG[1] = (w_DMG[1] * w_HIT + n_PerHIT_DMG *(100-w_HIT))/100;
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 0.3;
 		n_Delay[ksDelayGlobal] = 0.3;
@@ -2099,7 +2100,7 @@ function CalcSkillDamage()
 			damageType = kDmgTypeRanged;
 			w_SkillMod += n_A_ActiveSkillLV *0.1 -0.1;
 			w_TotalHits = 2;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
@@ -2107,7 +2108,7 @@ function CalcSkillDamage()
 		{
 			w_SkillMod += n_A_ActiveSkillLV *0.1;
 			w_TotalHits = n_B[en_SIZE]+1;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
@@ -2120,7 +2121,7 @@ function CalcSkillDamage()
 			wLAch=1;
 			if(monsterDebuffs[6] == 1) // LexA
 				w_TotalHits += 1;
-				
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.7;
 		}
@@ -2128,18 +2129,18 @@ function CalcSkillDamage()
 		{
 			var numSpheres = 1;
 			damageType = kDmgTypeRanged;
-			
+
 			w_SkillMod += n_A_ActiveSkillLV *0.5;
 			if(n_A_JobSearch2()==15)
 				numSpheres = SkillSearch( skill_MO_SUMMON_SPIRIT_SPHERE );
 			else
 				numSpheres = acolyteBuffs[ksSpheres];
-				
+
 			numSpheres = Min( n_A_ActiveSkillLV, numSpheres );
-			
+
 			w_TotalHits = numSpheres;
-			
-			
+
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 1.0 + numSpheres;
 			n_Delay[ksDelayGlobal] = 0.5;
@@ -2149,7 +2150,7 @@ function CalcSkillDamage()
 			damageType = kDmgTypeRanged;
 			w_SkillMod += 0.5;
 			w_TotalHits = 3;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -2159,7 +2160,7 @@ function CalcSkillDamage()
 			damageType = kDmgTypeRanged;
 			w_SkillMod += n_A_STR *0.08 - 0.5;
 			w_TotalHits = 2;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayA] = 1.0;
@@ -2170,7 +2171,7 @@ function CalcSkillDamage()
 			w_SkillMod += n_A_ActiveSkillLV * 0.5 - 0.5;
 			var DEATH = [1,1.2,1.6,2,2.4,3,3.6,4,5,6,7,8,9,10];
 			w_TotalHits = DEATH[eval(document.calcForm.SkillSubNum.value)];
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -2180,16 +2181,16 @@ function CalcSkillDamage()
 			// show HP drain
 			myInnerHtml( "CRInumname", '<font color="#FF0000"><b>Health Drain</b></font>', 0 );
 			myInnerHtml( "CRInum", '<font color="#FF0000"><b>' + 20 * n_A_ActiveSkillLV + '</b></font>', 0 );
-			
+
 			// are we in the small area or outer area
 			var areaSize = parseInt( formElements["SkillSubNum"].value );
-			
+
 			damageType = kDmgTypeMelee;
-			
+
 			// ATK [ { ( Skill Level x 100 ) + 200 + Caster s VIT } x Caster s Base Level / 100 ] %
 			w_SkillMod = ( n_A_ActiveSkillLV + 2 + n_A_VIT / 100.0 ) * n_A_BaseLV / 100.0;
-			
-			if ( areaSize != 0 ) 
+
+			if ( areaSize != 0 )
 			{ // oustide 5x5 area
 				if ( n_A_ActiveSkillLV >= 3 )
 				{ // over level 3
@@ -2202,7 +2203,7 @@ function CalcSkillDamage()
 			}
 			w_TotalHits = 6;
 			w_SkillMod = w_SkillMod / w_TotalHits;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 0.5;
@@ -2212,22 +2213,22 @@ function CalcSkillDamage()
 		{
 			// ATK [{(Skill Level x 40) + 100} x Caster s Base Level / 100] %
 			w_SkillMod = ( ( n_A_ActiveSkillLV * 0.4 ) + 1.0 ) * n_A_BaseLV / 100.0;
-			
+
 			w_TotalHits = 2;
 			w_SkillMod = w_SkillMod / w_TotalHits;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
 		else if ( n_A_ActiveSkill === skill_RAN_AIMED_BOLT )
 		{
 			var numHits = formElements["SkillSubNum"].value;
-			
+
 			// 550%-1000% damage
 			w_SkillMod = ( n_A_ActiveSkillLV * 0.5 + 5 ) * n_A_BaseLV / 100.0;
 			w_TotalHits = numHits;
 			w_SkillMod = w_SkillMod;// / w_TotalHits;
-			
+
 			fixedCastTime *= 0.5;
 			variableCastTime *= 4.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -2240,11 +2241,11 @@ function CalcSkillDamage()
 				numRoyalGuards = 3;
 			}
 			w_TotalHits = numRoyalGuards;
-			
+
 			// Royal Guard in inspiration status will be calculated as having 3 Royal Guards in banding status during damage calculation.
 			// ATK [{(Skill Level x 120) + (Number of Royal Guards in Banding x 200)} x Caster s Base Level / 100] %
 			w_SkillMod = ( ( n_A_ActiveSkillLV * 1.2 ) + ( numRoyalGuards * 2.0 ) ) * n_A_BaseLV / 100.0;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 1.0;
 			n_Delay[ksDelayGlobal] = 3.0;
@@ -2256,7 +2257,7 @@ function CalcSkillDamage()
 			w_SkillMod = ( ( n_A_ActiveSkillLV * 1.0 ) + 10.0 ) * n_A_BaseLV / 120.0;
 			w_TotalHits = 7;
 			w_SkillMod = w_SkillMod / w_TotalHits;
-			
+
 			if ( SkillSearch( skill_AX_ENCHANT_DEADLY_POISON ) )
 			{ // half with edp on
 				w_SkillMod /= 2.0;
@@ -2265,7 +2266,7 @@ function CalcSkillDamage()
 			{ // Guillotine Katar
 				w_SkillMod *= 1.3;
 			}
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 			n_Delay[ksDelayGlobal] = 3.0 - 0.5 * n_A_ActiveSkillLV;
@@ -2279,9 +2280,9 @@ function CalcSkillDamage()
 			variableCastTime *= 1.0;
 			n_Delay[ksDelayGlobal] = 0.5;
 		}
-		
+
 		CalcAtkMods02(w_SkillMod,0);
-		
+
 		for ( var i = 0; i < 3; i++ )
 		{
 			w_DMG[i] = CalcFinalDamage(n_A_DMG[i],i);
@@ -2335,7 +2336,7 @@ function CalcSkillDamage()
 			wBT *= 5;
 			if(n_B[en_BOSS] == 5)
 				wBT = 1;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 1.0;
 			n_Delay[ksDelayGlobal] = 3.0;
@@ -2345,12 +2346,12 @@ function CalcSkillDamage()
 			wBT = Math.floor(wBT * element[n_B[en_ELEMENT]][ele_NEUTRAL]/100);
 			wBT = tPlusDamCut(wBT);
 			wBT *= n_A_ActiveSkillLV;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 1.5;
 			n_Delay[ksDelayGlobal] = 1.0;
 		}
-		
+
 		for ( var i = 0; i < 3; i++ )
 		{
 			Last_DMG_A[i] = Last_DMG_B[i] = wBT;
@@ -2362,7 +2363,7 @@ function CalcSkillDamage()
 			}
 			w_DMG[i] = wBT;
 		}
-		w_HIT_HYOUJI = 100;		
+		w_HIT_HYOUJI = 100;
 	}
 	else if ( n_A_ActiveSkill === skill_RAN_WARG_DASH ||
 			  n_A_ActiveSkill === skill_RAN_WARG_BITE ||
@@ -2372,7 +2373,7 @@ function CalcSkillDamage()
 		n_A_Weapon_element = ele_NEUTRAL;
 		damageType = kDmgTypeRanged;
 		wBT = 80 + Math.floor( n_A_DEX / 10 ) * 2 + Math.floor( n_A_INT / 2) * 2 + SkillSearch( skill_RAN_TOOTH_OF_WARG ) * 30;
-		
+
 		if ( n_A_ActiveSkill === skill_RAN_WARG_DASH )
 		{ // Warg Dash
 			var Weight = parseInt(formElements["SkillSubNum"].value);
@@ -2442,18 +2443,18 @@ function CalcSkillDamage()
 			InnStr[i] += Last_DMG_A[i];
 			w_DMG[i] = wBT;
 		}*/
-		
+
 		// doesn't miss
-		w_HIT_HYOUJI = 100;		
+		w_HIT_HYOUJI = 100;
 	}
 	else if ( n_A_ActiveSkill == skill_TH_ENVENOM ||
 			  ( n_A_ActiveSkill == skill_AS_POISON_REACT &&
 			    ( n_B[en_ELEMENT] < 50 ||  60 <= n_B[en_ELEMENT] ) ) )
 	{
 		n_A_Weapon_element = ele_POISON;
-	
+
 		CalcAtkMods02(w_SkillMod,0);
-		
+
 		wINV = Math.floor(ApplyDamageModifiers(0) * element[n_B[en_ELEMENT]][ele_POISON]/100);
 		n_PerHIT_DMG = wINV;
 
@@ -2465,7 +2466,7 @@ function CalcSkillDamage()
 			InnStr[i] += Last_DMG_A[i];
 		}
 		w_DMG[1] = (w_DMG[1] * w_HIT + wINV *(100-w_HIT))/100;
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 0.0;
 	}
@@ -2494,7 +2495,7 @@ function CalcSkillDamage()
 			InnStr[i] += Last_DMG_A[i];
 		}
 		w_DMG[1] = (w_DMG[1] * w_HIT)/100;
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 0.0;
 		n_Delay[ksDelayGlobal] = 0.7;
@@ -2537,7 +2538,7 @@ function CalcSkillDamage()
 			w_DMG[i] = Last_DMG_A[i];
 		}
 		w_DMG[1] = (w_DMG[1] * w_HIT)/100;
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 1.0;
 		n_Delay[ksDelayGlobal] = 1.0;
@@ -2551,7 +2552,7 @@ function CalcSkillDamage()
 		//Floor[Floor(Weapon Weight/2)*skill level + ATK ]*(100%+50%*s.lvl) * 5
 		/*var weightMod = Math.floor( Math.floor( ItemOBJ[n_A_Equip[0]][itm_WEIGHT] / 2 ) * n_A_ActiveSkillLV );
 		var skillMod = attack * ( ( 100 + 50 * n_A_ActiveSkillLV ) / 100 );*/
-		
+
 		// from mrk012:
 		var attack = ApplyEnemyDefense(clashingATKFormula(Math.floor( ItemOBJ[n_A_Equip[0]][itm_WEIGHT] / 2 )), 2, n_B[en_SOFTDEF]);
 		//attack = ApplyDamageModifiers( attack );
@@ -2607,7 +2608,7 @@ function CalcSkillDamage()
 			w_DMG[i] = Last_DMG_A[i];
 		}*/
 		//w_DMG[1] = w_DMG[1] * w_HIT / 100 + n_PerHIT_DMG * ( 100 - w_HIT ) / 100;
-		
+
 		// cast time
 		fixedCastTime *= 0.0;
 		if ( n_A_ActiveSkillLV === 5 )
@@ -2656,7 +2657,7 @@ function CalcSkillDamage()
 			InnStr[i] += Last_DMG_A[i];
 		}
 		w_HIT_HYOUJI = 100;
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 1.0;
 		n_Delay[ksDelayA] = 1.0;
@@ -2686,7 +2687,7 @@ function CalcSkillDamage()
 			physicalDamage[i] = ApplyEnemyDefense( n_A_DMG[i] * (((300 + (50 * n_A_ActiveSkillLV)) * w_SkillMod)/100), i, 0 );
 		}
 		myInnerHtml( "CRIATK", physicalDamage[0] + "-" + physicalDamage[2], 0 );
-		
+
 		// Calculate Magical portion
 		// INT*5*SkillLv + Random(500~1000)
 		myInnerHtml( "CRInumname", "Magical damage portion", 0 );
@@ -2698,7 +2699,7 @@ function CalcSkillDamage()
 			magicDamage[i] += baseRandomMagicDamage + i * baseRandomMagicDamage;
 		}
 		myInnerHtml( "CRInum", magicDamage[0] + "-" + magicDamage[2], 0 );
-		
+
 		// post damage to form
 		for ( var i = 0; i < 3; i++ )
 		{
@@ -2708,7 +2709,7 @@ function CalcSkillDamage()
 			InnStr[i] += physicalDamage[i] + "-";
 			InnStr[i] += magicDamage[i] + ")";
 		}
-		
+
 		// still hits on a miss
 		var minDamage = ApplyDamageModifiers(0) * n_A_ActiveSkillLV;
 		n_PerHIT_DMG = minDamage + magicDamage[1];
@@ -2722,7 +2723,7 @@ function CalcSkillDamage()
 			}
 		}
 		w_DMG[1] = ( w_DMG[1] * w_HIT + n_PerHIT_DMG * ( 100 - w_HIT ) ) / 100;
-		
+
 		// old stuff
 		/*w_SBr = new Array();
 		w = n_A_INT * 5 * n_A_ActiveSkillLV;
@@ -2742,7 +2743,7 @@ function CalcSkillDamage()
 			InnStr[i] += Last_DMG_A[i] +" ("+ w_DMG[i] +" + "+ w_SBr[i] +")";
 			w_DMG[i] = Last_DMG_A[i];
 		}
-		
+
 		var wX = ApplyDamageModifiers(0) * n_A_ActiveSkillLV;
 		n_PerHIT_DMG = wX + w_SBr[1];
 		str_PerHIT_DMG = (wX + w_SBr[0]) +"~"+ (wX + w_SBr[2]);
@@ -2755,7 +2756,7 @@ function CalcSkillDamage()
 			}
 		}
 		w_DMG[1] = (w_DMG[1] * w_HIT + n_PerHIT_DMG *(100-w_HIT))/100;*/
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 0.5;
 		n_Delay[ksDelayGlobal] = 0.8 + 0.2 * n_A_ActiveSkillLV;
@@ -2768,7 +2769,7 @@ function CalcSkillDamage()
 		{ // Imperial Set gives 10% more damage
 			impearialSetBonus = 1.1;
 		}
-		
+
 		myInnerHtml( "CRIATKname", '<Font color="#FF0000">Health Drain</Font>', 0 );
 		var str = '<font color="#FF0000">';
 		str += Math.floor( n_A_MaxHP / 5 );
@@ -2800,11 +2801,11 @@ function CalcSkillDamage()
 			else
 				w_DMG[i] = Math.floor(w_DMG[i] * (100-n_tok[191]) /100);
 			w_DMG[i] = Math.floor(w_DMG[i] * element[n_A_BodyZokusei * 10 +1][6]/100);
-			
+
 			w_DMG[i] = Math.floor(w_DMG[i] /2);
 		}
 		myInnerHtml("CRInum",'<Font color="#FF0000">'+3+ SubName[8][Language] + w_DMG[0] +"~"+ w_DMG[2] +" Damage</Font>",0);
-		
+
 		// Magic Portion
 		damageType = kDmgTypeMagic;
 		n_A_Weapon_element = ele_HOLY;
@@ -2843,7 +2844,7 @@ function CalcSkillDamage()
 			}
 		}
 		w_HIT_HYOUJI = 100;
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 3.0;
 		n_Delay[ksDelayGlobal] = 1.5;
@@ -2883,7 +2884,7 @@ function CalcSkillDamage()
 		}
 		w_DMG[1] = (w_DMG[1] * w_HIT + ApplyDamageModifiers(0) * 2 *(100-w_HIT))/100;
 		w_DMG[1] = Math.floor(w_DMG[1] * element[n_B[en_ELEMENT]][ele_NEUTRAL]/100);
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 0.0;
 	}
@@ -2902,7 +2903,7 @@ function CalcSkillDamage()
 			InnStr[i] += Last_DMG_A[i];
 		}
 		w_HIT_HYOUJI = 100;
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 1.5 + 0.5 * n_A_ActiveSkillLV;
 		n_Delay[ksDelayGlobal] = 1.5 + 0.5 * n_A_ActiveSkillLV;
@@ -2921,7 +2922,7 @@ function CalcSkillDamage()
 			InnStr[i] += Last_DMG_A[i];
 		}
 		w_HIT_HYOUJI = 100;
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 0.0;
 	}
@@ -2932,7 +2933,7 @@ function CalcSkillDamage()
 		n_A_Weapon_element = ele_NEUTRAL;
 		CalcAtkMods02(w_SkillMod,0);
 		w_SkillMod += n_A_ActiveSkillLV *0.75;
-		
+
 		work_B_DEF2 = [0,0,0];
 		work_B_DEF2[0] = n_B_DEF2[2];
 		work_B_DEF2[1] = n_B_DEF2[1];
@@ -2946,7 +2947,7 @@ function CalcSkillDamage()
 			Last_DMG_A[i] = Last_DMG_B[i] = w_DMG[i];
 			InnStr[i] += Last_DMG_A[i];
 		}
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 1.0;
 		n_Delay[ksDelayGlobal] = 0.5;
@@ -2994,7 +2995,7 @@ function CalcSkillDamage()
 		}
 		w_DMG[1] = (w_DMG[1] * w_HIT + ApplyDamageModifiers(0) * element[n_B[en_ELEMENT]][ele_NEUTRAL]/100 *(100-w_HIT))/100;
 		n_PerHIT_DMG = ApplyDamageModifiers(0) * element[n_B[en_ELEMENT]][ele_NEUTRAL]/100;
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 0.0;
 	}
@@ -3019,7 +3020,7 @@ function CalcSkillDamage()
 		w_DMG[1] = (w_DMG[1] * w_HIT + wX * 3 *(100-w_HIT))/100;
 		n_PerHIT_DMG = wX * 3;
 		str_PerHIT_DMG = wX * 3 +" (3"+ SubName[8][Language] + wX +" Damage)"
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 0.0;
 		n_Delay[ksDelayGlobal] = 2.5;
@@ -3045,7 +3046,7 @@ function CalcSkillDamage()
 		}
 		w_DMG[1] = (w_DMG[1] * w_HIT + ApplyDamageModifiers(0)* element[n_B[en_ELEMENT]][ele_NEUTRAL]/100 *(100-w_HIT))/100;
 		n_PerHIT_DMG = ApplyDamageModifiers(0) * element[n_B[en_ELEMENT]][ele_NEUTRAL]/100;
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 3.0;
 		n_Delay[ksDelayGlobal] = 3.0;
@@ -3056,7 +3057,7 @@ function CalcSkillDamage()
 		// user input
 		var remainingHP = 0;
 		var numMirrors = parseInt(formElements["SkillSubNum2"].value);
-		
+
 		n_PerHIT_DMG = 0;
 		n_A_Weapon_element = ele_NEUTRAL;
 		damageType = kDmgTypeRanged;
@@ -3069,7 +3070,7 @@ function CalcSkillDamage()
 		    remainingHP = parseInt(formElements["SkillSubNum"].value);
 		}
 		w = ( n_A_Weapon_ATK + weaponUpgradeAttack + equipmentAttack + overrefineAttack + strengthBonusAttack ) * (100 - monsterBuffs[status_en_buff_Elemental]) / 100;
-		
+
 		//w_DMG[0] = (statusAttack + w + n_A_ActiveSkillLV) * 40 + remainingHP * (n_A_BaseLV / 100) * n_A_ActiveSkillLV / 10;
 		//w_DMG[0] = ((statusAttack + w) * 17 + remainingHP) * n_A_ActiveSkillLV * 0.1 / 7;
 		w_DMG[0] = ((statusAttack + w) * 40) + (remainingHP * ((8 * n_A_ActiveSkillLV) / 100));
@@ -3080,7 +3081,7 @@ function CalcSkillDamage()
 		w_DMG[0] *= ( 100 - monsterBuffs[status_en_buff_Race] ) / 100;
 		w_DMG[0] *= ( rangedMod + 100 ) / 100;
 		w_DMG[0] *= weaponSizeMod;
-		
+
 		w_DMG[2] = w_DMG[1] = w_DMG[0];
 		for ( var i = 0; i < 3; i++ )
 		{
@@ -3089,7 +3090,7 @@ function CalcSkillDamage()
 			InnStr[i] += Last_DMG_A[i] + " (" + Last_DMG_B[i] + SubName[8][Language] + "7hit)";
 		}
 		w_HIT_HYOUJI = 100;
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 0.0;
 	}
@@ -3117,7 +3118,7 @@ function CalcSkillDamage()
 			Last_DMG_A[i] = Last_DMG_B[i] = w_DMG[i];
 			InnStr[i] += Last_DMG_A[i];
 		}
-		
+
 		w_HIT_HYOUJI = 100;
 		fixedCastTime *= 0.0;
 		variableCastTime *= 0.0;
@@ -3139,7 +3140,7 @@ function CalcSkillDamage()
 			Last_DMG_A[i] = Last_DMG_B[i] = w_DMG[i];
 			InnStr[i] += Last_DMG_A[i];
 		}
-		
+
 		w_HIT_HYOUJI = 100;
 		fixedCastTime *= 0.0;
 		variableCastTime *= 0.0;
@@ -3164,7 +3165,7 @@ function CalcSkillDamage()
 		}
 
 		w_HIT_HYOUJI = 100;
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 1.0;
 		n_Delay[ksDelayGlobal] = 1.0;
@@ -3200,7 +3201,7 @@ function CalcSkillDamage()
 			// multiply attack mod
 			tempAttack[i] *= attackMod;
 			//tempAttack[i] += masteryAttack;
-			
+
 			wAD[i] = (n_A_MATK[i] * 0.07 + 0.07 * (tempAttack[i]) + 0.14 * statusAttack) * n_B[en_VIT];
 			w_DMG[i] = Math.floor(wAD[i]);
 			w_DMG[i] *= ( rangedMod + 100 ) / 100;
@@ -3220,7 +3221,7 @@ function CalcSkillDamage()
 			w_DMG[i] = Last_DMG_A[i];
 		}
 		w_HIT_HYOUJI = 100;
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 1.0;
 		n_Delay[ksDelayGlobal] = 1.0;
@@ -3255,7 +3256,7 @@ function CalcSkillDamage()
 			InnStr[i] += Last_DMG_A[i];
 		}
 		w_HIT_HYOUJI = 100;
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 0.0;
 		n_Delay[ksDelayA] = 1.0;
@@ -3286,7 +3287,7 @@ function CalcSkillDamage()
 			InnStr[i] += Last_DMG_A[i];
 		}
 		w_HIT_HYOUJI = 100;
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 0.0;
 		n_Delay[ksDelayGlobal] = 1.0;
@@ -3322,7 +3323,7 @@ function CalcSkillDamage()
 			InnStr[i] += Last_DMG_A[i];
 		}
 		w_HIT_HYOUJI = 100;
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 5.0;
 		n_Delay[ksDelayA] = 1.0;
@@ -3372,7 +3373,7 @@ function CalcSkillDamage()
 		InnStr[2] += " (" +Math.floor(w *10000)/100 +"% Success Chance)";
 
 		w_HIT_HYOUJI = 100;
-		
+
 		fixedCastTime *= 0.0;
 		if ( n_A_ActiveSkill == skill_PR_TURN_UNDEAD )
 		{
@@ -3408,7 +3409,7 @@ function CalcSkillDamage()
 			InnStr[i] += wStrG;
 		}
 		w_HIT_HYOUJI = 100;
-		
+
 		fixedCastTime *= 5.0;
 		variableCastTime *= 0.0;
 		n_Delay[ksDelayGlobal] = 2.0;
@@ -3422,8 +3423,8 @@ function CalcSkillDamage()
 		var physicalDamage = new Array();
 		var magicDamage = new Array();
 		n_A_Weapon_element = ele_WIND;
-		
-		// ATK [{( Striking Level x 50 ) + ( Varetyr Spear Skill Level x 50 )} x Caster s Base Level / 100 ] % 
+
+		// ATK [{( Striking Level x 50 ) + ( Varetyr Spear Skill Level x 50 )} x Caster s Base Level / 100 ] %
 		myInnerHtml( "CRIATKname", "Physical damage", 0 );
 		n_A_DMG = GetBaseDmg( n_A_Weapon_element, false, 0 );
 		w_SkillMod = ( ( strikingLevel * 0.5 ) + ( n_A_ActiveSkillLV * 0.5 ) ) * n_A_BaseLV / 100.0;
@@ -3432,7 +3433,7 @@ function CalcSkillDamage()
 			physicalDamage[i] = ApplyEnemyDefense( n_A_DMG[i] * w_SkillMod, i, 0 );
 		}
 		myInnerHtml( "CRIATK", physicalDamage[0] + "-" + physicalDamage[2], 0 );
-		
+
 		// + MATK [{( Endow Tornado skill level x 50 ) + ( Caster s INT x Varetyr Spear Skill level )} x Caster s Base Level / 100 ] %
 		myInnerHtml( "CRInumname", "Magical damage", 0 );
 		w_SkillMod = ( ( endowLevel * 0.5 ) + ( n_A_ActiveSkillLV * n_A_INT / 100.0 ) ) * n_A_BaseLV / 100.0;
@@ -3441,7 +3442,7 @@ function CalcSkillDamage()
 			magicDamage[i] = CalcMagicDamage( n_A_MATK[i] * w_SkillMod );
 		}
 		myInnerHtml( "CRInum", magicDamage[0] + "-" + magicDamage[2], 0 );
-		
+
 		// post damage to form
 		for ( var i = 0; i < 3; i++ )
 		{
@@ -3451,7 +3452,7 @@ function CalcSkillDamage()
 			InnStr[i] += Math.floor( physicalDamage[i] ) + "-";
 			InnStr[i] += Math.floor( magicDamage[i] ) + ")";
 		}
-		
+
 		// Calculate Cast Time
 		fixedCastTime *= 2.0 - 0.2 * n_A_ActiveSkillLV;
 		variableCastTime *= 2.0 + 0.2 * n_A_ActiveSkillLV;
@@ -3475,7 +3476,7 @@ function CalcSkillDamage()
 			physicalDamage[i] = ApplyEnemyDefense( n_A_DMG[i] * w_SkillMod, i, 0 );
 		}
 		myInnerHtml( "CRIATK", physicalDamage[0] + "-" + physicalDamage[2], 0 );
-		
+
 		// Calculate Magical portion
 		myInnerHtml( "CRInumname", "Magical damage per Reverb", 0 );
 		w_SkillMod = ( n_A_ActiveSkillLV + 1.0 ) * n_A_BaseLV / 100.0;
@@ -3484,7 +3485,7 @@ function CalcSkillDamage()
 			magicDamage[i] = CalcMagicDamage( n_A_MATK[i] * w_SkillMod );
 		}
 		myInnerHtml( "CRInum", magicDamage[0] + "-" + magicDamage[2], 0 );
-		
+
 		// post damage to form
 		for ( var i = 0; i < 3; i++ )
 		{
@@ -3494,7 +3495,7 @@ function CalcSkillDamage()
 			InnStr[i] += Math.floor( physicalDamage[i] * numReverbs / numEnemies ) + "-";
 			InnStr[i] += Math.floor( magicDamage[i] * numReverbs / numEnemies ) + ")";
 		}
-		
+
 		// Cast Time
 		fixedCastTime *= 0.0;
 		variableCastTime *= 1.0 + 0.1 * n_A_ActiveSkillLV;
@@ -3510,7 +3511,7 @@ function CalcSkillDamage()
 		w_SkillMod = ( ( n_A_DEX + n_A_AGI ) * n_A_ActiveSkillLV / 5 ) / 100.0;
 		w_SkillMod *= n_A_BaseLV / 100.0;
 		CalcAtkMods02( w_SkillMod, 0 );
-		
+
 		// Calculate and report damage
 		for ( var i = 0; i < 3; i++ )
 		{
@@ -3518,7 +3519,7 @@ function CalcSkillDamage()
 			w_DMG[i] = physicalDamage[i] * numHits;
 			InnStr[i] = Math.floor( w_DMG[i] ) + " (" + physicalDamage[i] + " x " + numHits + ")";
 		}
-		
+
 		// Calculate Cast Time
 		fixedCastTime *= 0.5;
 		variableCastTime *= 1.0 + 0.5 * n_A_ActiveSkillLV;
@@ -3527,13 +3528,14 @@ function CalcSkillDamage()
 	}
 	else if ( n_A_ActiveSkill === skill_RUN_DRAGON_BREATH  || n_A_ActiveSkill === skill_RUN_DRAGON_BREATH_WATER)
 	{ // Dragon Breath
-	
+
 		// Local variables
 		var dragonTrainingMod = 0;
 		var elementalMod = 0;
 		var baseDamage = 0;
 		var totalDamage = 0;
 		var currentHP = parseInt(formElements["SkillSubNum"].value);
+    damageType = kDmgTypeRanged;
 		if ( currentHP > n_A_MaxHP )
 		{
 			currentHP = n_A_MaxHP;
@@ -3550,9 +3552,9 @@ function CalcSkillDamage()
 		} else if (n_A_ActiveSkill === skill_RUN_DRAGON_BREATH_WATER) {
 		    n_A_Weapon_element = ele_WATER;
 		}
-		
+
 		CalcElementalMod( n_A_Weapon_element );
-		
+
 		// Elemental Mod for fire element
 		elementalMod = weaponElementalMod / 100.0;
 		// Dragon Breath damage bonus: (95 + 5 * Skill Level) %
@@ -3564,6 +3566,8 @@ function CalcSkillDamage()
 		{
 			totalDamage = Math.floor( baseDamage * dragonTrainingMod * elementalMod );
 		}
+    totalDamage *= ( rangedMod + 100 ) / 100;
+    totalDamage =  Math.floor( totalDamage );
 		for ( var i = 0; i < 3; i++ )
 		{
 			w_DMG[i] = totalDamage;
@@ -3593,7 +3597,7 @@ function CalcSkillDamage()
 		n_A_Weapon_element = ele_FIRE; // Always fire
 		w_HIT_HYOUJI = 100; // doesn't miss
 		n_A_DMG = GetBaseDmg( n_A_Weapon_element, false, 0 );
-		
+
 		// ATK 100% + [{(Fire Trap Skill Level x Caster s DEX) + (INT x 5)} x (1.5 + Caster s Base Level / 100)] x {(Trap Research Skill Level x 20) / 100 }
 		w_SkillMod = ( ( n_A_ActiveSkillLV * n_A_DEX ) + ( n_A_INT * 5 ) ) / 100.0;
 		w_SkillMod *= 1.5 + n_A_BaseLV / 100.0;
@@ -3607,7 +3611,7 @@ function CalcSkillDamage()
 			Last_DMG_A[i] = Last_DMG_B[i] = w_DMG[i];
 			InnStr[i] += Last_DMG_A[i];
 		}
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 0.0;
 	}
@@ -3616,7 +3620,7 @@ function CalcSkillDamage()
 		n_A_Weapon_element = ele_WATER; // Always water
 		w_HIT_HYOUJI = 100; // doesn't miss
 		n_A_DMG = GetBaseDmg( n_A_Weapon_element, false, 0 );
-		
+
 		// ATK 100% + [{(Ice Trap Skill Level x Caster s DEX) + (INT x 5)} x (1.5 + Caster s Base Level / 100)] x {(Trap Research Skill Level x 20) / 100}
 		w_SkillMod = ( ( n_A_ActiveSkillLV * n_A_DEX ) + ( n_A_INT * 5 ) ) / 100.0;
 		w_SkillMod *= 1.5 + n_A_BaseLV / 100.0;
@@ -3628,7 +3632,7 @@ function CalcSkillDamage()
 			w_DMG[i] = ApplyEnemyDefense( w_DMG[i], i, 0 );
 			InnStr[i] = w_DMG[i];
 		}
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 0.0;
 	}
@@ -3636,10 +3640,10 @@ function CalcSkillDamage()
 	{ // Destruction Song
 		// Always neutral
 		n_A_Weapon_element = ele_NEUTRAL;
-		
+
 		// doesn't miss
 		w_HIT_HYOUJI = 100;
-		
+
 		var totalDamage = ( n_A_ActiveSkillLV * 1000 ) + ( n_A_INT * SkillSearch( skill_MIWA_VOICE_LESSONS ) );
 
 		for ( var i = 0; i < 3; i++ )
@@ -3647,7 +3651,7 @@ function CalcSkillDamage()
 			w_DMG[i] = totalDamage;
 			InnStr[i] = w_DMG[i];
 		}
-		
+
 		fixedCastTime *= 0.5;
 		variableCastTime *= -0.5 + 0.5 * n_A_ActiveSkillLV;
 		n_Delay[ksDelayGlobal] = 1.0;
@@ -3657,10 +3661,10 @@ function CalcSkillDamage()
 	{
 		// Always neutral
 		n_A_Weapon_element = ele_NEUTRAL;
-		
+
 		// doesn't miss
 		w_HIT_HYOUJI = 100;
-		
+
 		// Damage per second = {Target VIT x (New Poison Research Skill Level - 3)} + (Target HP/100)
 		var totalDamage = ( n_B[en_VIT] * ( SkillSearch( skill_GLT_RESEARCH_NEW_POISON ) - 3 ) ) + ( n_B[en_HP] / 100 );
 		totalDamage = Math.floor( totalDamage );
@@ -3670,7 +3674,7 @@ function CalcSkillDamage()
 			w_DMG[i] = totalDamage;
 			InnStr[i] = w_DMG[i];
 		}
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 0.0;
 		n_Delay[ksDelayGlobal] = 1.0;
@@ -3689,7 +3693,7 @@ function CalcSkillDamage()
 			}
 		}
 		n_A_DMG = GetBaseDmg( n_A_Weapon_element, false, 0 );
-		
+
 		// ATK [{(Skill Level x 150) + Caster s STR + Shield Weight} x Caster s Base Level / 100] % + (Caster s VIT x Shield upgrade level)
 		w_SkillMod = ( ( n_A_ActiveSkillLV * 1.5 ) + ( ( n_A_STR + shieldWeight ) / 100.0 ) ) * n_A_BaseLV / 100.0;
 		w_SkillMod *= imperialShieldBonus;
@@ -3699,7 +3703,7 @@ function CalcSkillDamage()
 			physicalDamage[i] = ApplyEnemyDefense( n_A_DMG[i] * w_SkillMod, i, 0 );
 			physicalDamage[i] += n_A_VIT * n_A_LEFT_DEF_PLUS;
 		}
-		
+
 		// post damage to form
 		for ( var i = 0; i < 3; i++ )
 		{
@@ -3707,7 +3711,7 @@ function CalcSkillDamage()
 			Last_DMG_A[i] = w_DMG[i];
 			InnStr[i] += Math.floor( Last_DMG_A[i] );
 		}
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 0.0;
 		n_Delay[ksDelayCooldown] = 2.0;
@@ -3737,7 +3741,7 @@ function CalcSkillDamage()
 			physicalDamage[i] = Math.floor( ApplyEnemyDefense( n_A_DMG[i] * w_SkillMod, i, 0 ) );
 		}
 		myInnerHtml( "CRIATK", physicalDamage[0] + "-" + physicalDamage[2], 0 );
-		
+
 		// Calculate Magical portion
 		// MATK [{(Skill Level x 300) + (# of Royal Guard in Banding status x 200)} x Caster s Job Level / 25] %
 		myInnerHtml( "CRInumname", "Magical damage of RoG", 0 );
@@ -3751,7 +3755,7 @@ function CalcSkillDamage()
 			magicDamage[i] = CalcMagicDamage( magicDamage[i] );
 		}
 		myInnerHtml( "CRInum", magicDamage[0] + "-" + magicDamage[2], 0 );
-		
+
 		// post damage to form
 		for ( var i = 0; i < 3; i++ )
 		{
@@ -3761,7 +3765,7 @@ function CalcSkillDamage()
 			InnStr[i] += Math.floor( physicalDamage[i] ) + "+";
 			InnStr[i] += Math.floor( magicDamage[i] ) + ")";
 		}
-		
+
 		fixedCastTime *= 0.5;
 		variableCastTime *= 1.5 + 0.5 * n_A_ActiveSkillLV;
 		n_Delay[ksDelayGlobal] = 2.0;
@@ -3771,13 +3775,13 @@ function CalcSkillDamage()
 	{
 		n_A_Weapon_element = ele_NEUTRAL;
 		var physicalDamage = new Array();
-		
+
 		for ( var i = 0; i < 3; i++ )
 		{
 			physicalDamage[i] = 200 * n_A_ActiveSkillLV;
 			physicalDamage[i] = ApplyEnemyDefense( physicalDamage[i], i, 0 );
 		}
-		
+
 		// post damage to form
 		for ( var i = 0; i < 3; i++ )
 		{
@@ -3785,21 +3789,21 @@ function CalcSkillDamage()
 			Last_DMG_A[i] = w_DMG[i];
 			InnStr[i] += Math.floor( Last_DMG_A[i] );
 		}
-		
+
 		fixedCastTime *= 2.0 - 0.2 * n_A_ActiveSkillLV;
 		variableCastTime *= 0.0;
 	}
 	else if ( n_A_ActiveSkill === skill_MEC_FAW_MAGIC_DECOY )
 	{
 		var magicDamage = new Array();
-		
+
 		// Calculate Magical portion
 		for ( var i = 0; i < 3; i++ )
 		{
 			magicDamage[i] = n_A_ActiveSkillLV * 50 + 250;
 			magicDamage[i] = CalcMagicDamage( magicDamage[i] );
 		}
-		
+
 		// post damage to form
 		for ( var i = 0; i < 3; i++ )
 		{
@@ -3807,7 +3811,7 @@ function CalcSkillDamage()
 			Last_DMG_A[i] = w_DMG[i];
 			InnStr[i] += Math.floor( Last_DMG_A[i] );
 		}
-		
+
 		fixedCastTime *= 2.0 - 0.2 * n_A_ActiveSkillLV;
 		variableCastTime *= 0.0;
 	}
@@ -3840,15 +3844,15 @@ function CalcSkillDamage()
 		var remodelMod = SkillSearch( skill_MEC_MAINFRAME_RESTRUCTURE ) + 8.0;
 		var spMod = currentSP + n_A_VIT;
 		var baseLevelMod = n_A_BaseLV / 100.0;
-		
-		// [{(Skill Level + 1) x (Remodel Mainframe Skill Level + 8 ) x 
+
+		// [{(Skill Level + 1) x (Remodel Mainframe Skill Level + 8 ) x
 		// (SP Used + Caster s VIT)} x Caster s Base Level / 100] + (Caster s Current HP)
 		for ( var i = 0; i < 3; i++ )
 		{
 			physicalDamage[i] = ( skillMod * remodelMod * spMod ) * baseLevelMod + currentHP;
 			physicalDamage[i] = ApplyEnemyDefense( physicalDamage[i], i, 0 );
 		}
-		
+
 		// post damage to form
 		for ( var i = 0; i < 3; i++ )
 		{
@@ -3865,7 +3869,7 @@ function CalcSkillDamage()
 	{
 		var fireDamage = new Array();
 		var shadowDamage = new Array();
-		
+
 		// (Fire Element) = MATK [{( Skill Level x 300 ) x ( Caster s Base Level / 100 ) /5 }] %
 		n_A_Weapon_element = ele_FIRE;
 		w_SkillMod = ( n_A_ActiveSkillLV * 3.0 ) * n_A_BaseLV / 100.0 / 5.0;
@@ -3876,7 +3880,7 @@ function CalcSkillDamage()
 		}
 		myInnerHtml( "CRIATKname", "Fire portion of damage", 0 );
 		myInnerHtml( "CRIATK", fireDamage[0] + "-" + fireDamage[2], 0 );
-		
+
 		// (Shadow Element) = MATK [{( Skill Level x 300 ) x ( Caster s Base Level / 100 ) x 4/5 }] %
 		n_A_Weapon_element = ele_DARK;
 		w_SkillMod = ( n_A_ActiveSkillLV * 3.0 ) * n_A_BaseLV / 100.0 * 4.0 / 5.0;
@@ -3887,7 +3891,7 @@ function CalcSkillDamage()
 		}
 		myInnerHtml( "CRInumname", "Shadow portion of damage", 0 );
 		myInnerHtml( "CRInum", shadowDamage[0] + "-" + shadowDamage[2], 0 );
-		
+
 		// post damage to form
 		for ( var i = 0; i < 3; i++ )
 		{
@@ -3895,7 +3899,7 @@ function CalcSkillDamage()
 			Last_DMG_A[i] = w_DMG[i];
 			InnStr[i] += Math.floor( Last_DMG_A[i] );
 		}
-		
+
 		fixedCastTime *= 1.0;
 		variableCastTime *= 3.0;
 		n_Delay[ksDelayGlobal] = 1.0;
@@ -3913,7 +3917,7 @@ function CalcSkillDamage()
 			monsterSizeValue = 6;
 		}
 		n_A_DMG = GetBaseDmg( n_A_Weapon_element, false, 0 );
-		
+
 		// ATK [(Skill Level x 150 + 100) x Caster s Base Level / 150] % + [(Target s Size value + Skill Level - 1) x Caster s STR] + [(Target s current weight x Caster s DEX / 120)]
 		// Where, Small = 2 / Medium = 4 / Large = 6
 		// On monsters, weight portion is changed to (Monster Level x 50)
@@ -3924,7 +3928,7 @@ function CalcSkillDamage()
 			physicalDamage[i] = ApplyEnemyDefense( n_A_DMG[i] * w_SkillMod, i, 0 );
 			physicalDamage[i] += ( ( monsterSizeValue + n_A_ActiveSkillLV - 1 ) * n_A_STR ) + ( n_B[en_LEVEL] * 50 * n_A_DEX / 120.0 );
 		}
-		
+
 		// post damage to form
 		for ( var i = 0; i < 3; i++ )
 		{
@@ -3932,7 +3936,7 @@ function CalcSkillDamage()
 			Last_DMG_A[i] = w_DMG[i];
 			InnStr[i] += Math.floor( Last_DMG_A[i] );
 		}
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 0.0;
 	}
@@ -3943,7 +3947,7 @@ function CalcSkillDamage()
 		var hpCost = n_A_MaxHP * ( ( 10 + ( 2 * n_A_ActiveSkillLV ) ) / 100.0 );
 		var spCost = n_A_MaxSP * ( (  5 + ( 1 * n_A_ActiveSkillLV ) ) / 100.0 );
 		n_A_DMG = GetBaseDmg( n_A_Weapon_element, false, 0 );
-		
+
 		// HP Cost: (10 + 2 * Skill Level) %
 		// SP Cost: (5 + 1 * Skill Level) %
 		// ATK [((Caster s consumed HP + SP) / 4) x Caster s Base Level / 100] %
@@ -3972,7 +3976,7 @@ function CalcSkillDamage()
 				physicalDamage[i] += ( n_A_ActiveSkillLV * 240 ) + ( n_B[en_LEVEL] * 40 );
 			}
 		}
-		
+
 		// post damage to form
 		for ( var i = 0; i < 3; i++ )
 		{
@@ -3980,7 +3984,7 @@ function CalcSkillDamage()
 			Last_DMG_A[i] = w_DMG[i];
 			InnStr[i] += Math.floor( Last_DMG_A[i] );
 		}
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 1.0 + 0.1 * n_A_ActiveSkillLV;
 		n_Delay[ksDelayGlobal] = 1.0;
@@ -4020,7 +4024,7 @@ function CalcSkillDamage()
 			currentSP = 1;
 			formElements["SkillSubNum3"].value = 1;
 		}
-		
+
 		// SP Damage modifier: (1 + 0.2 * Skill Level)
 		// ATK [(Skill Level x 500) x Caster s Base Level / 100] % + bonusDamage
 		// If used as a combo skill,
@@ -4046,7 +4050,7 @@ function CalcSkillDamage()
 				physicalDamage[i] += ( n_A_MaxHP - currentHP ) + ( currentSP * spMod ) + ( n_A_BaseLV * 10 );
 			}
 		}
-		
+
 		// post damage to form
 		for ( var i = 0; i < 3; i++ )
 		{
@@ -4054,7 +4058,7 @@ function CalcSkillDamage()
 			Last_DMG_A[i] = w_DMG[i];
 			InnStr[i] += Math.floor( Last_DMG_A[i] );
 		}
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 0.8 + 0.2 * n_A_ActiveSkillLV;
 		n_Delay[ksDelayGlobal] = 0.1 * n_A_ActiveSkillLV;
@@ -4064,7 +4068,7 @@ function CalcSkillDamage()
 		var damageTaken = parseInt(formElements["SkillSubNum"].value);
 		var physicalDamage = new Array();
 		n_A_DMG = GetBaseDmg( n_A_Weapon_element, false, 0 );
-		
+
 		// ATK [{(Target s HP / 100) x Skill Level} x Caster s Base Level / 125] %
 		// + [Received damage x {1 + (Skill Level x 0.2)}]
 		// (Maximum of 5000% ATK)
@@ -4080,7 +4084,7 @@ function CalcSkillDamage()
 			physicalDamage[i] = ApplyEnemyDefense( n_A_DMG[i] * w_SkillMod, i, 0 );
 			physicalDamage[i] += damageTaken * ( 1 + ( n_A_ActiveSkillLV * 0.2 ) );
 		}
-		
+
 		// post damage to form
 		for ( var i = 0; i < 3; i++ )
 		{
@@ -4088,7 +4092,7 @@ function CalcSkillDamage()
 			Last_DMG_A[i] = w_DMG[i];
 			InnStr[i] += Math.floor( Last_DMG_A[i] );
 		}
-		
+
 		fixedCastTime *= 0.0;
 		variableCastTime *= 0.0;
 		n_Delay[ksDelayGlobal] = 1.0;
@@ -4118,7 +4122,7 @@ function CalcSkillDamage()
 			InnStr[i] += wStrG;
 		}
 		w_HIT_HYOUJI = 100;
-		
+
 		fixedCastTime *= 5.0;
 		variableCastTime *= 0.0;
 		n_Delay[ksDelayGlobal] = 2.0;
@@ -4132,13 +4136,13 @@ function CalcSkillDamage()
 		damageType = kDmgTypeMagic;
 		w_SkillMod = 1;
 		n_subHits = 0;
-		
+
 		// Monster Skills
 		if ( n_A_ActiveSkill == skill_MON_DARK_STRIKE )
 		{
 			n_A_Weapon_element = ele_DARK;
 			w_TotalHits = Math.round(n_A_ActiveSkillLV / 2);
-				
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.5;
 			if ( n_A_ActiveSkillLV % 2 == 0 )
@@ -4155,7 +4159,7 @@ function CalcSkillDamage()
 		{
 			n_A_Weapon_element = ele_FIRE;
 			w_TotalHits = n_A_ActiveSkillLV;
-			
+
 			var cast = 0.4 + 0.4 * n_A_ActiveSkillLV;
 			fixedCastTime *= 0.2 * cast;
 			variableCastTime *= 0.8 * cast;
@@ -4177,7 +4181,7 @@ function CalcSkillDamage()
 		{
 			n_A_Weapon_element = ele_WIND;
 			w_TotalHits = n_A_ActiveSkillLV;
-			
+
 			var cast = 0.4 + 0.4 * n_A_ActiveSkillLV;
 			fixedCastTime *= 0.2 * cast;
 			variableCastTime *= 0.8 * cast;
@@ -4187,7 +4191,7 @@ function CalcSkillDamage()
 		{
 			n_A_Weapon_element = ele_FIRE;
 			w_SkillMod = 1.4 + n_A_ActiveSkillLV * 0.2;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 1.6;
 			if(n_A_ActiveSkillLV <=5)
@@ -4204,7 +4208,7 @@ function CalcSkillDamage()
 			n_A_Weapon_element = ele_FIRE;
 			w_TotalHits = 4 + n_A_ActiveSkillLV;
 			w_SkillMod = 0.5;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 2.2 - 0.2 * n_A_ActiveSkillLV;
 			n_Delay[ksDelayGlobal] = 0.1;
@@ -4213,7 +4217,7 @@ function CalcSkillDamage()
 		{
 			n_A_Weapon_element = ele_WATER;
 			w_SkillMod = 1 + n_A_ActiveSkillLV * 0.1;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.8;
 			n_Delay[ksDelayGlobal] = 1.5;
@@ -4223,7 +4227,7 @@ function CalcSkillDamage()
 			n_A_Weapon_element = ele_WIND;
 			w_TotalHits = n_A_ActiveSkillLV;
 			w_SkillMod = 1;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.8 * n_A_ActiveSkillLV;
 			n_Delay[ksDelayGlobal] = 2.0;
@@ -4232,7 +4236,7 @@ function CalcSkillDamage()
 		{
 			n_A_Weapon_element = ele_GHOST;
 			w_SkillMod = 0.7 + n_A_ActiveSkillLV * 0.1;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.5;
 			if( n_A_ActiveSkillLV == 10 )
@@ -4264,7 +4268,7 @@ function CalcSkillDamage()
 		{
 			n_A_Weapon_element = ele_GHOST;
 			w_TotalHits = Math.round(n_A_ActiveSkillLV / 2);
-				
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.5;
 			if(n_A_ActiveSkillLV % 2 == 0)
@@ -4282,7 +4286,7 @@ function CalcSkillDamage()
 			n_A_Weapon_element = ele_FIRE;
 			w_TotalHits = (n_A_ActiveSkillLV +2);
 			w_SkillMod = 0.2;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 2.64 - (0.24 * n_A_ActiveSkillLV);
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -4291,7 +4295,7 @@ function CalcSkillDamage()
 		{
 			n_A_Weapon_element = ele_FIRE;
 			w_SkillMod = 1 + n_A_ActiveSkillLV * 0.2;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.4;
 			n_Delay[ksDelayGlobal] = 2.0;
@@ -4301,7 +4305,7 @@ function CalcSkillDamage()
 			n_A_Weapon_element = ele_FIRE;
 			w_TotalHits = Math.floor((n_A_ActiveSkillLV+1) / 2);
 			w_SkillMod = 1.25;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 12.0;
 			n_Delay[ksDelayGlobal] = Math.floor(n_A_ActiveSkillLV / 2) * 1 +2;
@@ -4310,7 +4314,7 @@ function CalcSkillDamage()
 		{
 			n_A_Weapon_element = ele_WIND;
 			w_TotalHits = n_A_ActiveSkillLV + 2;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 2 + n_A_ActiveSkillLV * 0.4;
 		}
@@ -4326,7 +4330,7 @@ function CalcSkillDamage()
 				w_SkillMod = n_A_ActiveSkillLV * 0.4 - 0.8;
 			else // lvl10
 				w_SkillMod = 3.3;
-				
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 12.4 - n_A_ActiveSkillLV * 0.4;
 			n_Delay[ksDelayGlobal] = 5.0;
@@ -4341,7 +4345,7 @@ function CalcSkillDamage()
 				w_TotalHits = 9;
 			SG_Special_HITnum = w_TotalHits;
 			w_SkillMod = 1 + n_A_ActiveSkillLV * 0.3;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= n_A_ActiveSkillLV;
 			n_Delay[ksDelayAnimation] = 0.1 * w_TotalHits;
@@ -4350,7 +4354,7 @@ function CalcSkillDamage()
 		{
 			n_A_Weapon_element = ele_WATER;
 			w_SkillMod = 1.0 + n_A_ActiveSkillLV * 0.10;
-			
+
 			fixedCastTime *= 0.0;
 			if (n_A_ActiveSkillLV <= 4)
 			{
@@ -4368,7 +4372,7 @@ function CalcSkillDamage()
 			w_TotalHits = eval(document.calcForm.SkillSubNum.value);
 			SG_Special_HITnum = w_TotalHits;
 			w_SkillMod = 0.7 + n_A_ActiveSkillLV * 0.5;
-			
+
 			var cast = 4 + n_A_ActiveSkillLV * 0.8;
 			fixedCastTime *= 0.2 * cast;
 			variableCastTime *= 0.8 * cast;
@@ -4392,7 +4396,7 @@ function CalcSkillDamage()
 			else
 			{
 				w_SkillMod = 1.25;
-				
+
 				var cast = n_A_ActiveSkillLV *0.8;
 				fixedCastTime *= cast * 0.2;
 				variableCastTime *= cast * 0.8;
@@ -4405,7 +4409,7 @@ function CalcSkillDamage()
 			w_TotalHits = n_A_ActiveSkillLV;
 			n_A_Weapon_element = ele_GHOST;
 			w_SkillMod = 0.7 + n_A_ActiveSkillLV * 0.1;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 1.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -4417,7 +4421,7 @@ function CalcSkillDamage()
 			w_SkillMod = 1.25;
 			if(n_A_ActiveSkill==skill_PR_HOLY_LIGHT_SL)
 				w_SkillMod *= 5;
-				
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 2.0;
 		}
@@ -4430,7 +4434,7 @@ function CalcSkillDamage()
 			{
 				n_A_MATK[2]=0;n_A_MATK[0]=0;n_A_MATK[1]=0;
 			}
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 15.0;
 			n_Delay[ksDelayA] = 1.0;
@@ -4446,7 +4450,7 @@ function CalcSkillDamage()
 				w_SkillMod = 0.01;
 			if(PlayerVersusPlayer==1)
 				w_SkillMod = 0;
-				
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.1;
 			n_Delay[ksDelayGlobal] = 0.5;
@@ -4457,7 +4461,7 @@ function CalcSkillDamage()
 			w_SkillMod = n_A_ActiveSkillLV * 0.05;
 			if(PlayerVersusPlayer==1)
 				w_SkillMod = 0;
-				
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.1;
 			n_Delay[ksDelayGlobal] = 0.5;
@@ -4469,7 +4473,7 @@ function CalcSkillDamage()
 			w_SkillMod = 0.4 + n_A_BaseLV / 100;
 			if(PlayerVersusPlayer==1)
 				w_SkillMod = 0;
-				
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 2.0;
 			n_Delay[ksDelayA] = 1.0;
@@ -4481,7 +4485,7 @@ function CalcSkillDamage()
 			n_A_Weapon_element = ele_FIRE;
 			w_SkillMod = 0.9;
 			w_TotalHits = n_A_ActiveSkillLV;
-			
+
 			fixedCastTime *= 0.7 * n_A_ActiveSkillLV * 0.2;
 			variableCastTime *= 0.7 * n_A_ActiveSkillLV * 0.8;
 		}
@@ -4490,7 +4494,7 @@ function CalcSkillDamage()
 			n_A_Weapon_element = ele_FIRE;
 			w_SkillMod = 0.5;
 			w_TotalHits = Math.round(n_A_ActiveSkillLV / 2) +4 ;
-			
+
 			fixedCastTime *= (6.5 - 0.5 * n_A_ActiveSkillLV) * 0.2;
 			variableCastTime *= (6.5 - 0.5 * n_A_ActiveSkillLV) * 0.8;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -4502,7 +4506,7 @@ function CalcSkillDamage()
 			n_A_Weapon_element = ele_FIRE;
 			w_SkillMod = 1.5 + n_A_ActiveSkillLV * 1.5;
 			w_TotalHits = 3;
-			
+
 			fixedCastTime *= 3.0 * 0.2;
 			variableCastTime *= 3.0 * 0.8;
 			n_Delay[ksDelayGlobal] = 3.0;
@@ -4511,7 +4515,7 @@ function CalcSkillDamage()
 		{
 			n_A_Weapon_element = ele_WATER;
 			w_TotalHits = n_A_ActiveSkillLV + 2;
-			
+
 			fixedCastTime *= n_A_ActiveSkillLV * 0.7 * 0.2;
 			variableCastTime *= n_A_ActiveSkillLV * 0.7 * 0.8;
 		}
@@ -4520,7 +4524,7 @@ function CalcSkillDamage()
 			n_A_Weapon_element = ele_WATER;
 			w_SkillMod = 1.0 + n_A_ActiveSkillLV * 0.5;
 			w_TotalHits = 1;
-			
+
 			fixedCastTime *= 3.0 * 0.2;
 			variableCastTime *= 3.0 * 0.8;
 			n_Delay[ksDelayGlobal] = 3.0;
@@ -4530,7 +4534,7 @@ function CalcSkillDamage()
 			n_A_Weapon_element = ele_WIND;
 			w_SkillMod = 1.0;
 			w_TotalHits = Math.floor(n_A_ActiveSkillLV / 2) +1;
-			
+
 			fixedCastTime *= (Math.floor(n_A_ActiveSkillLV / 2) + 1)*0.2;
 			variableCastTime *= (Math.floor(n_A_ActiveSkillLV / 2) + 1)*0.8;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -4540,7 +4544,7 @@ function CalcSkillDamage()
 			n_A_Weapon_element = ele_WIND;
 			w_SkillMod = 1.6 + 0.4 * n_A_ActiveSkillLV;
 			w_TotalHits = 1;
-			
+
 			fixedCastTime *= 4.0*0.2;
 			variableCastTime *= 4.0*0.8;
 		}
@@ -4549,7 +4553,7 @@ function CalcSkillDamage()
 			n_A_Weapon_element = ele_WIND;
 			w_SkillMod = 1.0 + n_A_ActiveSkillLV * 1.0;
 			w_TotalHits = 1;
-			
+
 			fixedCastTime *= 4.0 * 0.2;
 			variableCastTime *= 4.0 * 0.8;
 		}
@@ -4557,11 +4561,11 @@ function CalcSkillDamage()
 		else if ( n_A_ActiveSkill == skill_WAR_DRAIN_LIFE )
 		{
 			n_A_Weapon_element = ele_NEUTRAL;
-			
+
 			// MATK [{( Skill Level x 200 ) + ( Caster s INT ) } x ( Caster s Base Level / 100 )] %
 			w_SkillMod = ( ( n_A_ActiveSkillLV * 2.0 ) + n_A_INT / 100.0 ) * n_A_BaseLV / 100.0;
 			w_TotalHits = 1;
-			
+
 			fixedCastTime *= 1.0;
 			variableCastTime *= 4.0;
 			n_Delay[ksDelayCooldown] = 2.0;
@@ -4570,12 +4574,12 @@ function CalcSkillDamage()
 		{
 			var imprisoned = parseInt(formElements["SkillSubNum"].value);
 			n_A_Weapon_element = ele_GHOST;
-			
+
 			// MATK [{( Skill Level + 4 ) x 100 ) + ( Caster s INT )} x ( Caster s Base Level / 100 )] %
 			w_SkillMod = ( ( n_A_ActiveSkillLV + 4 ) + n_A_INT / 100.0 ) * n_A_BaseLV / 100.0;
 			w_SkillMod *= imprisoned;
 			w_TotalHits = 1;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 2.0;
 			n_Delay[ksDelayGlobal] = 0.5;
@@ -4583,11 +4587,11 @@ function CalcSkillDamage()
 		else if ( n_A_ActiveSkill == skill_WAR_CRIMSON_ROCK )
 		{
 			n_A_Weapon_element = ele_FIRE;
-			
+
 			// MATK [{( Skill Level x 300 ) x ( Caster s Base Level / 100 ) + 1300 }] %
 			w_SkillMod = ( ( n_A_ActiveSkillLV * 3.0 ) * n_A_BaseLV / 100.0 ) + 13.0;
 			w_TotalHits = 1;
-			
+
 			fixedCastTime *= 2.0;
 			variableCastTime *= 5.0;
 			n_Delay[ksDelayGlobal] = 2.0;
@@ -4598,11 +4602,11 @@ function CalcSkillDamage()
 			var distance = parseInt(formElements["SkillSubNum"].value);
 			var distanceMod = 10.0 + 5.0 * distance;
 			n_A_Weapon_element = ele_NEUTRAL;
-			
+
 			// MATK [{( Skill Level x 400 ) x ( Caster s Base Level / 120 )} + 2500 ] %
 			w_SkillMod = ( ( n_A_ActiveSkillLV * 4.0 ) * n_A_BaseLV / 120.0 ) + distanceMod;
 			w_TotalHits = 1;
-			
+
 			fixedCastTime *= 0.5 + 0.5 * n_A_ActiveSkillLV;
 			variableCastTime *= 9.0 + 1.0 * n_A_ActiveSkillLV;
 			n_Delay[ksDelayGlobal] = 2.0;
@@ -4611,11 +4615,11 @@ function CalcSkillDamage()
 		else if ( n_A_ActiveSkill == skill_WAR_FROST_MISTY )
 		{
 			n_A_Weapon_element = ele_WATER;
-			
+
 			// MATK [{( Skill Level x 100 ) + 200 } x ( Caster s Base Level / 100 )] %
 			w_SkillMod = ( n_A_ActiveSkillLV + 2.0 ) * n_A_BaseLV / 100.0;
 			w_TotalHits = 1;
-			
+
 			fixedCastTime *= 0.5;
 			variableCastTime *= 1.5 + 0.5 * n_A_ActiveSkillLV;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -4625,7 +4629,7 @@ function CalcSkillDamage()
 		{
 			var freezing = parseInt(formElements["SkillSubNum"].value);
 			n_A_Weapon_element = ele_WATER;
-			
+
 			// (Targets not in Freezing status)
 			// = MATK [{( Skill Level x 100 ) + 500 } x ( Caster s Base Level / 150 )] %
 			// (Targets in Freezing status)
@@ -4639,7 +4643,7 @@ function CalcSkillDamage()
 				w_SkillMod = ( n_A_ActiveSkillLV + 5.0 ) * n_A_BaseLV / 150.0;
 			}
 			w_TotalHits = 1;
-			
+
 			fixedCastTime *= 1.0;
 			variableCastTime *= 1.5 + 0.5 * n_A_ActiveSkillLV;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -4655,7 +4659,7 @@ function CalcSkillDamage()
 			}
 			w_SkillMod = Math.floor( w_SkillMod / w_TotalHits );
 			SG_Special_HITnum = w_TotalHits;
-			
+
 			fixedCastTime *= 1.0;
 			variableCastTime *= 3.0 + 0.5 * n_A_ActiveSkillLV;
 			n_Delay[ksDelayCooldown] = 3.0;
@@ -4663,11 +4667,11 @@ function CalcSkillDamage()
 		else if ( n_A_ActiveSkill == skill_WAR_EARTH_STRAIN )
 		{
 			n_A_Weapon_element = ele_EARTH;
-			
+
 			// MATK [{( Skill Level x 100 ) + 2000 } x ( Caster s Base Level / 100 )] %
 			w_SkillMod = ( n_A_ActiveSkillLV + 20.0 ) * n_A_BaseLV / 100.0;
 			w_TotalHits = 1;
-			
+
 			fixedCastTime *= 2.0;
 			variableCastTime *= 1.0 + 1.0 * n_A_ActiveSkillLV;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -4676,12 +4680,12 @@ function CalcSkillDamage()
 		else if ( n_A_ActiveSkill == skill_WAR_TETRA_VORTEX )
 		{
 			n_A_Weapon_element = parseInt(formElements["SkillSubNum"].value);
-			
+
 			// MATK (500 + 500 * Skill Level) % * 4 hits
 			w_SkillMod = ( n_A_ActiveSkillLV * 5.0 + 5.0 );
 			w_TotalHits = 4;
 			SG_Special_HITnum = w_TotalHits;
-			
+
 			fixedCastTime *= 2.0;
 			variableCastTime *= /*8.0 */+ 4.0 + 1.0 * n_A_ActiveSkillLV;
 			n_Delay[ksDelayGlobal] = 2.0;
@@ -4694,7 +4698,7 @@ function CalcSkillDamage()
 			n_A_Weapon_element = ele_HOLY;
 			w_SkillMod = ( ( n_A_ActiveSkillLV * 0.2 ) + 3.0 ) * n_A_BaseLV / 100.0;
 			w_TotalHits = 1;
-			
+
 			fixedCastTime *= 0.5;
 			variableCastTime *= 2.0;
 			n_Delay[ksDelayGlobal] = 0.5;
@@ -4705,7 +4709,7 @@ function CalcSkillDamage()
 			n_A_Weapon_element = ele_HOLY;
 			w_SkillMod = ( ( n_A_ActiveSkillLV * 1.0 ) + 5.0 ) * n_A_BaseLV / 100.0;
 			w_TotalHits = 1;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 2.0;
 			n_Delay[ksDelayGlobal] = 0.5;
@@ -4726,7 +4730,7 @@ function CalcSkillDamage()
 			w_SkillMod = ( n_A_ActiveSkillLV * 0.6 ) * n_A_BaseLV / 100.0;
 			w_TotalHits = parseInt(formElements["SkillSubNum"].value);
 			SG_Special_HITnum = w_TotalHits;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 1.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -4764,7 +4768,7 @@ function CalcSkillDamage()
 			w_SkillMod = ( n_A_ActiveSkillLV * 0.4 ) * n_A_BaseLV / 100.0;
 			w_TotalHits = parseInt(formElements["SkillSubNum"].value);
 			SG_Special_HITnum = w_TotalHits;
-			
+
 			fixedCastTime *= 0.9 - 0.2 * n_A_ActiveSkillLV;
 			variableCastTime *= 2.1 + 0.2 * n_A_ActiveSkillLV;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -4776,7 +4780,7 @@ function CalcSkillDamage()
 			n_A_Weapon_element = ele_POISON;
 			w_SkillMod = ( ( n_A_ActiveSkillLV * 3.0 ) + 10.0 ) * n_A_BaseLV / 120.0;
 			w_TotalHits = 1;
-			
+
 			fixedCastTime *= 1.0 - 0.2 * n_A_ActiveSkillLV;
 			if ( n_A_ActiveSkillLV < 5 )
 			{
@@ -4801,7 +4805,7 @@ function CalcSkillDamage()
 			}
 			w_TotalHits = parseInt(formElements["SkillSubNum"].value);
 			SG_Special_HITnum = w_TotalHits;
-			
+
 			fixedCastTime *= 1.1 - 0.1 * n_A_ActiveSkillLV;
 			if ( EquipNumSearch( 1292 ) ) { // Mental Stick
 				if (n_A_Weapon_ATKplus > 5) w_SkillMod *= 1.0+((n_A_Weapon_ATKplus-5)*2/100.0);
@@ -4815,11 +4819,11 @@ function CalcSkillDamage()
 		{
 			var boltLevel = parseInt(formElements["SkillSubNum"].value);
 			n_A_Weapon_element = ele_FIRE;
-			
+
 			// MATK [(100 * Bolt Skill Level) + (50 * Skill Level)] %
 			var bonus = (100 + StPlusCalc2(bon_DMG_SKILL+skill_MA_FIRE_BOLT)+StPlusCard(bon_DMG_SKILL+skill_MA_FIRE_BOLT))/100.0;
 			w_SkillMod = (( n_A_ActiveSkillLV * 0.5 ) + boltLevel)*bonus;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
@@ -4827,11 +4831,11 @@ function CalcSkillDamage()
 		{
 			var boltLevel = parseInt(formElements["SkillSubNum"].value);
 			n_A_Weapon_element = ele_WATER;
-			
+
 			// MATK [(100 * Bolt Skill Level) + (50 * Skill Level)] %
 			var bonus = (100 + StPlusCalc2(bon_DMG_SKILL+skill_MA_COLD_BOLT)+StPlusCard(bon_DMG_SKILL+skill_MA_COLD_BOLT))/100.0;
 			w_SkillMod = (( n_A_ActiveSkillLV * 0.5 ) + boltLevel)*bonus;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
@@ -4839,11 +4843,11 @@ function CalcSkillDamage()
 		{
 			var boltLevel = parseInt(formElements["SkillSubNum"].value);
 			n_A_Weapon_element = ele_WIND;
-			
+
 			// MATK [(100 * Bolt Skill Level) + (50 * Skill Level)] %
 			var bonus = (100 + StPlusCalc2(bon_DMG_SKILL+skill_MA_LIGHTNING_BOLT)+StPlusCard(bon_DMG_SKILL+skill_MA_LIGHTNING_BOLT))/100.0;
 			w_SkillMod = (( n_A_ActiveSkillLV * 0.5 ) + boltLevel)*bonus;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.0;
 		}
@@ -4865,7 +4869,7 @@ function CalcSkillDamage()
 				w_TotalHits = 4;
 			}
 			n_subHits = 1;
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 0.5 + 0.5 * n_A_ActiveSkillLV;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -4881,11 +4885,11 @@ function CalcSkillDamage()
 					shieldMdef = ItemOBJ[n_A_Equip[eq_SHIELD]][i + 1];
 				}
 			}
-			
+
 			// MATK [{(Caster s Base Level x 4) + (Shield MDEF x 100)} + (Caster s INT x 2)] %
 			n_A_Weapon_element = ele_HOLY;
 			w_SkillMod = ( ( n_A_BaseLV * 4 ) + shieldMdef ) + ( n_A_INT * 2 / 100.0 );
-			
+
 			fixedCastTime *= 0.0;
 			variableCastTime *= 1.0;
 			n_Delay[ksDelayGlobal] = 1.0;
@@ -4922,7 +4926,7 @@ function CalcSkillDamage()
 				InnStr[i] += Last_DMG_A[i] + " (" + w_DMG[i] + SubName[8][Language] + w_TotalHits + "hit)";
 				w_DMG[i] *= w_TotalHits;
 			}
-			
+
 			if ( n_A_ActiveSkill == skill_MIWA_METALLIC_SOUND )
 			{
 				// show sp taken from enemy
