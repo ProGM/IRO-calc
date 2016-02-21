@@ -3516,17 +3516,19 @@ function CalcVariableCast()
 function CalcFixedCast()
 {
 	fixedCastTime = 1;
+	fixedCastTimeSub = 0;
 	var reductionPercentage = 0;
-
-	reductionPercentage += n_tok[bon_RED_FIXEDCAST];
-
-	// Equipment
-
+	var itemsReduction = 0, skillsReduction = 0;
+	var globalReduction = 0;
 
 	if ( EquipNumSearch( 1549 ) && SU_DEX >= 120 )
 	{ // Temporal Dex Boots
-		fixedCastTime -= 0.5;
+		fixedCastTimeSub += 0.5;
 	}
+
+	globalReduction = n_tok[bon_RED_FIXEDCAST];
+
+	// Equipment
 
 	// Items
 
@@ -3535,13 +3537,13 @@ function CalcFixedCast()
 	{ // Radius
 		if ( n_A_ActiveSkill >= skill_WAR_READING_SPELLBOOK && n_A_ActiveSkill <= skill_WAR_TETRA_VORTEX )
 		{ // reduce fixed cast time of warlock skills
-			reductionPercentage += Math.floor(n_A_INT/15) + Math.floor(n_A_BaseLV/15) + 5 * SkillSearch( skill_WAR_RADIUS );
+			globalReduction = Math.max(globalReduction, Math.floor(n_A_INT/15) + Math.floor(n_A_BaseLV/15) + 5 * SkillSearch( skill_WAR_RADIUS ));
 		}
 	}
 
 	if ( acolyteBuffs[ksSacrament] )
 	{ // Sacrament
-		reductionPercentage += acolyteBuffs[ksSacrament] * 10;
+		globalReduction = Math.max(globalReduction, acolyteBuffs[ksSacrament] * 10);
 	}
 
 	if ( performerBuffs[ksChorus] === ksDancesWithWargs &&
@@ -3555,17 +3557,11 @@ function CalcFixedCast()
 			performerBonus = 70;
 		}
 
-		reductionPercentage += performerBonus;
-	}
-
-	// Fixed Cast is capped at 50% reduction
-	if ( reductionPercentage > 50 )
-	{
-		reductionPercentage = 50;
+		globalReduction = Math.max(globalReduction, performerBonus);
 	}
 
 	// Calculate final Fixed Cast Percentage
-	fixedCastTime *= ( 1 - reductionPercentage / 100 );
+	fixedCastTime *= ( 1 - globalReduction / 100 );
 	if ( SkillSearch(skill_KAG_16TH_NIGHT) ) {
 		fixedCastTime = 0;
 	}

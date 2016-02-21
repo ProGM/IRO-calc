@@ -2,6 +2,7 @@ var formElements;
 
 var variableCastTime = 1;
 var fixedCastTime = 1;
+var fixedCastTimeSub = 0;
 var totalCastTime = 1;
 var globalCastDelay = 1;
 var reuseDelay = 1;

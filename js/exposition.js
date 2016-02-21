@@ -321,7 +321,8 @@ WordData = [
 ,[""," element magic "]
 ,["","Abrasive"]
 ,["","Holy Elemental Scroll"] //260
-,["","Undead Elemental Scroll"]
+,["","Undead Elemental Scroll"],
+,["","Flat Fixed Cast Time"]
 ];
 }
 

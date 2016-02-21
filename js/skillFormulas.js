@@ -4949,6 +4949,7 @@ function CalcSkillDamage()
 	if ( SkillSearch(skill_SOR_SUMMON_TYPE) == 1 && SkillSearch(skill_SOR_SUMMON_LEVEL) > 0 && SkillSearch(skill_SOR_SPIRIT_CONTROL) == 1 ) {
 		fixedCastTime = Math.max(fixedCastTime - 1, 0);
 	}
+  fixedCastTime = Math.max(fixedCastTime - fixedCastTimeSub, 0)
 	setupPVPPlayerMods();
 }
 function setupPVPPlayerMods() {

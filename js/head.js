@@ -8,7 +8,7 @@ function calc()
 	{
 		InnStr[i] = "";
 	}
-	
+
 	// Re-Calc all stats.
 	StAllCalc();
 	// Find Functional HIT.
@@ -23,13 +23,13 @@ function calc()
 
 	// Find Trifecta Blow Chance.
 	CalcTrifectaBlowChance();
-	
+
 	// Find Double Attack Chance.
 	CalcDoubleAttackChance();
-	
+
 	// Duple light.
 	CalcDupleLightChance();
-	
+
 	// Now Do something with the data.
 	CalcFinalCriticalChance();
 
@@ -48,17 +48,17 @@ function calc()
 	{
 		// Initialize working damage with base damage.
 		n_A_DMG[i] = baseDamage[i];
-		
+
 		// Criticals always take the max base damage.
 		n_A_CriATK[i] = baseDamage[2];
 	}
-	
+
 	// Apply Base Damage Mods
 	CalcBaseDamageMods();
-	
+
 	// Calculate damage.
 	CalcSkillDamage();
-	
+
 	// Display additional data.
 	DisplayAdditionalBattleInfo();
 }
@@ -68,7 +68,7 @@ function CalcBaseDamageMods()
 
 	//MOVED THIS IN CALC ATTACK TO VIEW IN ATTACK WINDOW
 	/*var baseDamageMod = 100;
-	
+
 	if ( n_A_ActiveSkill != skill_MO_OCCULT_IMPACTION &&
 		 n_A_ActiveSkill != skill_MO_GUILLOTINE_FIST &&
 		 n_A_ActiveSkill != skill_MO_MAX_GUILLOTINE_FIST )
@@ -92,7 +92,7 @@ function CalcBaseDamageMods()
 		if (miscEffects[ksCursed])
 			baseDamageMod -= 25;
 	}
-	
+
 	for ( var i = 0; i < 3; i++ )
 	{ // apply to working damage and crit damage
 		n_A_DMG[i] = n_A_DMG[i] * baseDamageMod / 100;
@@ -103,7 +103,7 @@ function CalcBaseDamageMods()
 function CalcAtkMods02( skillMod, criticalAttack )
 { // skillmod + x - (start skillmod, critAtk:normalatk)
 	var localAttackMod = CalcSkillModAdditions( skillMod * 100 );
-		
+
 	if ( criticalAttack === 0 )
 	{
 		// non-crit
@@ -111,7 +111,7 @@ function CalcAtkMods02( skillMod, criticalAttack )
 		{
 			n_A_DMG = GetBaseDmg( n_A_Weapon_element, false, 0 );
 		}
-		
+
 		n_A_DMG[0] = Math.floor( n_A_DMG[0] * localAttackMod / 100 );
 		n_A_DMG[1] = Math.floor( n_A_DMG[1] * localAttackMod / 100 );
 		n_A_DMG[2] = Math.floor( n_A_DMG[2] * localAttackMod / 100 );
@@ -123,7 +123,7 @@ function CalcAtkMods02( skillMod, criticalAttack )
 		{
 			n_A_CriATK = GetBaseDmg( n_A_Weapon_element, false, 0 );
 		}
-		
+
 		n_A_CriATK[0] = Math.floor( n_A_CriATK[0] * localAttackMod / 100 );
 		n_A_CriATK[1] = Math.floor( n_A_CriATK[1] * localAttackMod / 100 );
 		n_A_CriATK[2] = Math.floor( n_A_CriATK[2] * localAttackMod / 100 );
@@ -162,7 +162,7 @@ function CalcFalconDamage()
 		return Math.round( wBT * 100 ) / 100;
 	}
 	else
-	{  
+	{
 		hunterPetDamage = 0;
 		return 0;
 	}
@@ -229,7 +229,7 @@ function CalcHitAfterSpecialSkills()
 	if ( SkillSearch(skill_TKM_UNION ) )
 		w_HIT = 100;
 	w_HIT = Max(5,Min(w_HIT,100)); // 5 <= x <= 100
-	
+
 	if(StPlusCalc2(bon_CH_GUIDE_ATK)+StPlusCard(bon_CH_GUIDE_ATK))
 		w_HIT = w_HIT + (100 - w_HIT) * (StPlusCalc2(bon_CH_GUIDE_ATK)+StPlusCard(bon_CH_GUIDE_ATK)) / 100;
 
@@ -247,10 +247,10 @@ function CalcCriticalBlowChance()
 	{
 		bonusCrit = 25 + ( n_A_ActiveSkillLV * 5 );
 	}
-	
+
 	var totalCrit = n_A_CRI + bonusCrit;
 	criticalAttackChance = totalCrit - n_B[en_LUK] * 0.2 + 0.1; // CritShield
-	
+
 	if ( monsterDebuffs[status_en_SLEEP] )
 	{ // Sleep doubles the chance for a crit
 		criticalAttackChance *= 2;
@@ -275,7 +275,7 @@ function CalcTrifectaBlowChance()
 	{
 		var breezeLevel = SkillSearch( skill_RAN_FEAR_BREEZE );
 		var breezeChance = 12;
-		
+
 		if ( breezeLevel === 3 )
 		{
 			breezeChance += 9;
@@ -363,7 +363,7 @@ function CalcDoubleAttackChance()
 			doubleAttackChance = SkillSearch( skill_GS_CHAIN_ACTION ) * 5 + ( ( 100 - SkillSearch( skill_GS_CHAIN_ACTION ) * 5 ) * 25 / 100 );
 		}
 	}
-	
+
 	doubleAttackHit = w_HIT;
 	if ( doubleAttackChance != 0 && n_A_WeaponType != weapTyp_HANDGUN )
 	{
@@ -386,7 +386,7 @@ function CalcFinalCriticalChance()
 	w998J = w998H - w998I;
 	w998K = w998B + w998E + w998G + w998I;
 	w998L = 100 - w998K;
-	
+
 	if ( n_A_ActiveSkill == skill_ALL_BASIC_ATTACK ||
 		 n_A_ActiveSkill == skill_SN_FOCUSED_ARROW_STRIKE ||
 		 n_A_ActiveSkill == skill_NIN_SHADOW_SLASH ||
@@ -402,7 +402,7 @@ function CalcFinalDamage( damage, type )
 { // Calc Dmg from RAWDmg (rawDmg, (min,avg,max,crit:=10))
 	damage = ApplyDamageModifiers( damage );
 	damage = ApplySkillModifiers( damage );
-	
+
 	if ( type == 10 )
 	{
 		damage = ApplyEnemyDefense( damage * 1.4, type, 0 );
@@ -411,10 +411,10 @@ function CalcFinalDamage( damage, type )
 	{
 		damage = ApplyEnemyDefense( damage, type, 0 );
 	}
-	damage = Math.floor(tPlusDamCut(damage));	
+	damage = Math.floor(tPlusDamCut(damage));
 	damage = Max( 0, damage );
 	return Math.floor( damage );
-	
+
 /* Old BattleCalc order
 	if ( type == 10 )
 	{
@@ -424,7 +424,7 @@ function CalcFinalDamage( damage, type )
 	{
 		damage = ApplyEnemyDefense( damage, type, 0 );
 	}
-	
+
 	damage = Max( 0, damage );
 	damage = ApplyDamageModifiers( damage );
 	return Math.floor( damage );
@@ -473,27 +473,27 @@ function ApplyEnemyDefense( damage, index, wBC4_3 )
 	{
 		return Math.floor( damage * defReduction( n_B[en_HARDDEF] ) ) - n_B_DEF2[0] + wBC4_3;
 	}
-	
+
 	if ( n_A_ActiveSkill == skill_GS_WOUNDING_SHOT )
 	{
 		return damage + wBC4_3;
 	}
-	
+
 	if ( n_tok[bon_IGN_DEF_RC_FORMLESS+n_B[en_RACE]] >= 1 )
 	{
 		return damage + wBC4_3;
 	}
-	
+
 	if ( n_tok[bon_IGN_DEF_NONBOSS] >= 1 && n_B[en_BOSS] == 0 )
 	{
 		return damage + wBC4_3;
 	}
-	
+
 	if ( n_tok[bon_IGN_DEF_NONBOSS] >= 10 )
 	{
 		return damage + wBC4_3;
 	}
-	
+
 	if ( SkillSearch( skill_TKM_UNION ) )
 	{
 		return damage + wBC4_3;
@@ -509,14 +509,14 @@ function ApplyEnemyDefense( damage, index, wBC4_3 )
 	}
 
 	damage = Max( 1, damage );
-	
+
 	return damage;
 }
 
 function ApplyDamageModifiers( damage )
 { // % Dmg Mod - (startMod=100)
 	var dmgMultiplier = 0;
-	
+
 	if ( determiningEDPdamage == 0 )
 	{
 		if(n_A_ActiveSkill==skill_TH_ENVENOM || n_A_ActiveSkill==skill_HU_FANTASTIC_ARROW)
@@ -528,7 +528,7 @@ function ApplyDamageModifiers( damage )
 		damage += Math.floor(n_A_MATK[w_MagiclBulet] * defReduction(n_B[en_HARDMDEF]) - n_B_MDEF2); // MDef
 	if ( n_A_ActiveSkill==skill_GS_GUNSLINGER_MINE )
 		damage += n_A_ActiveSkillLV * 50;
-	
+
 	// Ninja throwing
 	if ( n_A_ActiveSkill === skill_NIN_THROW_DAGGER )
 	{
@@ -540,7 +540,7 @@ function ApplyDamageModifiers( damage )
 	{
 		damage += KunaiOBJ[eval(document.calcForm.SkillSubNum.value)][0] * 3;
 	}
-	
+
 	if ( determiningEDPdamage == 0 && not_use_card == 0 )
 	{
 		// Crit Bonus
@@ -589,15 +589,15 @@ function ApplyDamageModifiers( damage )
 				dmgMultiplier += (n_A_BaseLV + n_A_LUK + n_A_DEX) / (12 - SkillSearch(skill_TKM_LUNAR_WRATH) * 3 );
 			}
 		}
-		
+
 		damage = Math.floor( damage * ( 100 + dmgMultiplier ) / 100 );
 	}
 
 	//PRIMA ERA QUI, MO SPOSTO!!!
 	//damage = Math.floor(tPlusDamCut(damage));
-	
+
 	//damage = ApplySkillModifiers( damage );
-	
+
 	return damage;
 }
 
@@ -619,25 +619,25 @@ function ApplySkillAdditions( skillMod )
 			skillMod += 5;
 		}
 	}
-	
+
 	// Spear Dynamo
 	if ( SkillSearch( skill_LK_SPEAR_DYNAMO ) )
 	{
 		skillMod += SkillSearch( skill_LK_SPEAR_DYNAMO ) * 5;
 	}
-	
+
 	// Falcon Eyes
 	if ( SkillSearch( skill_SN_FALCON_EYES ) )
 	{
 		skillMod += SkillSearch( skill_SN_FALCON_EYES ) * 2;
 	}
-	
+
 	// Kihop
 	if ( SkillSearch( skill_TK_KIHOP ) )
 	{
 		skillMod += 2 * SkillSearch( skill_TK_KIHOP ) * SkillSearch( skill_TK_KIHOP_PARTY );
 	}
-	
+
 	// Windmill Rush
 	if ( performerBuffs[ksMaestroSolo] === ksWindmillRush && performerBuffs[ksMaestroSoloLevel] > 0 )
 	{
@@ -647,7 +647,7 @@ function ApplySkillAdditions( skillMod )
 
 		skillMod += skillBonus + voiceLessonsBonus + jobLvlBonus;
 	}
-	
+
 	return skillMod;
 }
 
@@ -811,7 +811,7 @@ function ApplySkillModifiers( damage )
 		var randomNumber = Math.floor( Math.random() * ( maxPercentage - 14 ) ) + 15;
 		gloomyMultiplier = randomNumber / 100.0;
 		gloomyMultiplier += 1.0;
-		
+
 		if ( n_A_ActiveSkill == skill_KN_BRANDISH_SPEAR   ||
 		   	 n_A_ActiveSkill == skill_CR_SHIELD_BOOMERANG ||
 		   	 n_A_ActiveSkill == skill_LK_CLASHING_SPIRAL  ||
@@ -834,7 +834,7 @@ function ApplySkillModifiers( damage )
 		var randomNumber = Math.floor( Math.random() * ( maxPercentage - 14 ) ) + 15;
 		gloomyMultiplier = randomNumber / 100.0;
 		gloomyMultiplier += 1.0;
-		
+
 		if ( n_A_ActiveSkill == skill_KN_BRANDISH_SPEAR   ||
 		   	 n_A_ActiveSkill == skill_CR_SHIELD_BOOMERANG ||
 		   	 n_A_ActiveSkill == skill_LK_CLASHING_SPIRAL  ||
@@ -859,15 +859,15 @@ function ApplyMagnumBreakBonus()
 	{ // EDP or Magnum Break
 		w_DMG[2] += EDP_DMG( 2 ) * HitNum;
 		w_DMG[1] += EDP_DMG( 1 ) * HitNum;
-		
+
 		if ( w_HIT_EDP == 100 )
 		{
 			w_DMG[0] += EDP_DMG(0) * HitNum;
 		}
-		
+
 		EDPhyouzi( HitNum );
 	}
-	
+
 	// version 2
 	if(SkillSearch( skill_AX_ENCHANT_DEADLY_POISON ) || otherBuffs[ksMagnumBreak])
 	{
@@ -884,7 +884,7 @@ function ApplyMagnumBreakBonus()
 		else
 			str_bSUB += w0 +"~"+ w2 +"( add invocation rate(?)"+ (Math.floor(w_HIT * w_HIT_EDP) / 100) +"%)<BR>";
 	}
-	
+
 	// version 3
 	if (SkillSearch( skill_AX_ENCHANT_DEADLY_POISON ) || otherBuffs[ksMagnumBreak])
 	{
@@ -928,7 +928,7 @@ function ApplyMagnumBreakBonus()
 		}
 	}
 	return 0;
-	
+
 	// version 4
 	if ( otherBuffs[ksMagnumBreak] )
 	{ // Magnum Break
@@ -999,7 +999,7 @@ function tPlusDamCut( damage )
 		{ // Venom Impress
 			damage *= 1.0 + 0.1 * monsterDebuffs[status_en_VENOM_IMPRESS];
 		}
-			
+
 		// damage increased by land enchants
 		multipliers = [110,114,117,119,120];
 		if ( otherBuffs[ksElementField] === 0 && otherBuffs[ksElementFieldLvl] >= 1 && n_A_Weapon_element === ele_FIRE )
@@ -1015,7 +1015,7 @@ function tPlusDamCut( damage )
 			damage = Math.floor( damage * multipliers[otherBuffs[ksElementFieldLvl] - 1] / 100 );
 		}
 	}
-	
+
 	// Monster Buffs
 	/*if ( monsterBuffs[status_en_buff_Assumptio] && PlayerVersusPlayer === 0 )
 	{ // Assumptio
@@ -1060,7 +1060,7 @@ function DisplayAdditionalBattleInfo()
 	w_FLEE = 100 - ( n_B_HIT - n_A_FLEE );
 	w_FLEE = Between( 0, w_FLEE, 95 );
 	myInnerHtml( "BattleFLEE", Math.floor( ( w_FLEE + ( 100 - w_FLEE ) * n_A_LUCKY / 100 ) * 100 ) / 100 + SubName[0][Language], 0 );
-	
+
 	// cast time and delay info
 	DisplayCastAndDelay();
 
@@ -1084,7 +1084,7 @@ function DisplayAdditionalBattleInfo()
 			myInnerHtml( "ATK_0" + i, 0, 0 );
 		}
 	}
-	
+
 	// Min Number of Hits ---------------------------------
 	var minNumHits;
 	minNumHits = Math.floor(n_B[en_HP] / w_DMG[2]);
@@ -1095,7 +1095,7 @@ function DisplayAdditionalBattleInfo()
 	else
 		myInnerHtml("MinATKnum",SubName[5][Language],0);
 
-	
+
 	if(SG_Special_HITnum != 0)
 	{
 		if ( minNumHits == 1 )
@@ -1160,7 +1160,7 @@ function DisplayAdditionalBattleInfo()
 	{
 		minNumHits += 1;
 	}
-	
+
 	// Experience earned
 	if ( minNumHits < 10000 )
 	{
@@ -1172,7 +1172,7 @@ function DisplayAdditionalBattleInfo()
 		myInnerHtml("AtkBaseExp",SubName[7][Language],0);
 		myInnerHtml("AtkJobExp",SubName[7][Language],0);
 	}
-	
+
 	// Battle Duration
 	if ( minNumHits < 10000 )
 	{
@@ -1201,7 +1201,7 @@ function DisplayAdditionalBattleInfo()
 		myInnerHtml( "AveATKnum", SubName[5][Language], 0 );
 		myInnerHtml( "BattleTime", SubName[6][Language], 0 );
 	}
-	
+
 	var w = 1 / (totalCastTime + totalDelay) * w_DMG[1];
 	w *= 100;
 	w = Math.round(w);
@@ -1221,7 +1221,7 @@ function DisplayAdditionalBattleInfo()
 	{
 		calcIncomingDamage();
 	}
-	
+
 	// Fill in the battle results
 	for ( var i = 0; i < InnStr.length; i++ )
 	{
@@ -1232,6 +1232,7 @@ function DisplayAdditionalBattleInfo()
 function DisplayCastAndDelay()
 { // Cast times and delays
 	// print cast time
+
 	totalCastTime = fixedCastTime + variableCastTime;
 	if ( totalCastTime != 0 )
 	{
@@ -1244,7 +1245,7 @@ function DisplayCastAndDelay()
 
 	// calculate longest delay
 	totalDelay = 0;
-	
+
 	if ( SkillSearch( skill_WAR_READING_SPELLBOOK ) )
 	{
 		// instant list
@@ -1328,7 +1329,7 @@ function DisplayCastAndDelay()
 		strSUB2 += n_Delay[ksDelayGlobal].toFixed(1) + " sec</br>";
 	}
 	else if ( longestDelay == ksDelayAnimation )
-	{		
+	{
 		if ( n_A_ActiveSkill == skill_MO_RAGING_QUADRUPLE_BLOW ||
 			 n_A_ActiveSkill == skill_MO_RAGING_THRUST ||
 			 n_A_ActiveSkill == skill_CH_GLACIER_FIST )
@@ -1371,7 +1372,7 @@ function DisplayCriticalDamage()
 {
 	myInnerHtml("CRIATKname",SubName[3][Language],0);
 	myInnerHtml("CRInumname",SubName[4][Language],0);
-		
+
 	var wk = [0,0,0];
 	if ( n_A_WeaponType === weapTyp_KATAR )
 	{

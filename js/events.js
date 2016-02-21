@@ -767,6 +767,7 @@ function CalcExtendedInfo()
 	else if ( wKK == 9 )
 	{ // Cast time and Delay
 		var fixedCast = ( fixedCastTime * 100 ) + "%";
+		var flatFixedCast = (-fixedCastTimeSub) + "s";
 		var varCast = Math.round(variableCastTime * 10000 ) / 100 + "%";
 		var delay = ( 100 - globalCastDelay ) + "%";
 		var cooldown = ( reuseDelay * 100 ) + "%";
@@ -775,6 +776,9 @@ function CalcExtendedInfo()
 		var castTimeTable = '<table class="bgLtTable"><tr>';
 		castTimeTable += '<th class="bgLtRow4 padded optCaption">' + GetWord(254) + "</th>";
 		castTimeTable += '<td class="bgLtRow2 padded optArea">' + fixedCast + "</td>";
+		castTimeTable += "</tr><tr>";
+		castTimeTable += '<th class="bgLtRow3 padded optCaption">' + GetWord(263) + "</th>";
+		castTimeTable += '<td class="bgLtRow1 padded optArea">' + flatFixedCast + "</td>";
 		castTimeTable += "</tr><tr>";
 		castTimeTable += '<th class="bgLtRow3 padded optCaption">' + GetWord(255) + "</th>";
 		castTimeTable += '<td class="bgLtRow1 padded optArea">' + varCast + "</td>";
