@@ -37,7 +37,7 @@ window.parseItemEffects = (function() {
     "bDex" : bon_DEX,
     "bLuk" : bon_LUK,
     "bAtk" : bon_ATK,
-    "bAtk2" : bon_ATK
+    "bAtk2" : bon_ATK,
     "bDef" : bon_DEF,
     "bDef2" : bon_DEF,
     "bMdef" : bon_MDEF,
