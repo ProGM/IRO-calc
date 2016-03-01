@@ -501,6 +501,7 @@ with ( document.calcForm )
 	// Bonus Stats
 	StPlusCalc(); // set bStat + %
 
+ 	LoadStatsFromScripts();
  	// CalcHP --------------------------------------------------------
 	n_A_MaxHP = calcHP();
 	myInnerHtml("A_MaxHP",n_A_MaxHP,0);
@@ -1362,6 +1363,24 @@ function StPlusCalc2( nSTP2 )
 
 	return w;
 }
+
+function LoadStatsFromScripts()
+{ // Additional [Stats] by equip
+	for ( var i = 0; i <= 20; i++ )
+	{	 // for each equip/ card
+		if (ItemOBJ[n_A_Equip[i]][itm_BONUS_START] === bon_SCRIPT) {
+			var effects = parseItemEffects(ItemOBJ[n_A_Equip[i]][itm_BONUS_START + 1], { type: ItemOBJ[n_A_Equip[i]][itm_TYPE] });
+			for (var key in effects) {
+				if (key > 450) {
+					n_tok[key] = effects[key];
+				} else {
+					n_tok[key] += effects[key];
+				}
+			}
+		}
+	}
+}
+
 
 function StPlusCard( nSTP2 )
 { // Additional [Stats] by cards

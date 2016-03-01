@@ -180,6 +180,10 @@ function CalcWargDamage()
 		//wBT = 80 + Math.floor( n_A_DEX / 10 ) * 2 + Math.floor( n_A_INT / 2 ) * 2 + SkillSearch( skill_RAN_TOOTH_OF_WARG ) * 30;
 		for (i = 0; i < 3; i++) {
 			TMPATK[i] = TMPATK[i] * SkillSearch( skill_RAN_WARG_STRIKE ) * 2;
+
+			if (n_tok[bon_DMG_SKILL + skill_RAN_WARG_STRIKE] !== undefined) {
+				TMPATK[i] *= 1 + (n_tok[bon_DMG_SKILL + skill_RAN_WARG_STRIKE] / 100.0);
+			}
 		}
 		not_use_card = 0;
 		//wBT = Math.floor( wBT * element[n_B[en_ELEMENT]][ele_NEUTRAL] / 100 );

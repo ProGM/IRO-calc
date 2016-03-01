@@ -106,7 +106,7 @@ Bonus1
   }
 
 Bonus2
-  = bonus:("bonus2" _ BonusKeyword comma Keyword comma InnerExpression) {
+  = bonus:("bonus2" _ BonusKeyword comma (Keyword/String) comma InnerExpression) {
     var l1 = {}, l2 = {};
     l2[bonus[4]] = bonus[6];
     l1[bonus[2]] = l2;
@@ -139,7 +139,7 @@ Bonus5
   }
 
 String
-  = [\"][A-Z_]+[\"] { return text(); }
+  = [\"]name:([A-Z_]+)[\"] { return name.join(''); }
 
 Constant
  = [A-Z_]+ { return text(); }
@@ -148,7 +148,7 @@ Keyword
   = [A-Za-z_]+ { return text(); }
 
 BonusKeyword
-  = "b"[A-Z][A-Za-z]+ { return text(); }
+  = "b"[A-Z][A-Za-z]+[0-9]? { return text(); }
 
 InnerExpression
   = expr:(EvaluatedExpression) { return expr; }

@@ -4899,6 +4899,11 @@ function CalcSkillDamage()
 			var mElementBoost = 100 + StPlusCalc2(bon_INC_MAGIC_NEUTRAL+n_A_Weapon_element) + StPlusCard(bon_INC_MAGIC_NEUTRAL+n_A_Weapon_element);
 			w_SkillMod *= mElementBoost / 100.0;
 		}
+
+    if (n_tok[bon_DMG_SKILL + n_A_ActiveSkill] !== undefined) {
+      w_SkillMod *= parseInt(n_tok[bon_DMG_SKILL + n_A_ActiveSkill] / 100.0);
+    }
+
 		// calculate damage
 		if ( n_subHits === 0 )
 		{

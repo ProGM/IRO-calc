@@ -1545,7 +1545,7 @@ ITEM_NAME = [
 ,[1542,0,0,"Robe of Judgement + Shoes of Judgement + Shawl of Judgement + Empowered Mace of Judgement","Increases SP cost of [Adoramus] by 30.",0]
 ,[1543,0,0,"Robe of Judgement + Shoes of Judgement + Shawl of Judgement + Mace of Judgement","Increases SP cost of [Adoramus] by 30.",0]
 ,[1544,0,0,"Archangel Wing","",0]
-,[1545,0,0,"Fallen Angel Wing","Reduces magical damage received from [Demi-Human] race by 10%.",0]
+,[1545,0,0,"Fallen Angel Wing (OLD)","Reduces magical damage received from [Demi-Human] race by 10%.",0]
 ,[1546,0,0,"Enhanced Variant Shoes","Each 2 upgrades increases [DEF] by 1.",0]
 ,[1547,0,0,"Temporal Boots","For every 3 refinements, Max HP +300, Max SP +10.",0]
 ,[1548,0,0,"Temporal STR Boots","For every 3 refinements, Max HP +300, Max SP +10, and ATK +7. If base STR is 120 or higher, ATK +50.",0]
@@ -1555,5 +1555,9 @@ ITEM_NAME = [
 ,[1552,0,0,"Temporal VIT Boots","For every 3 refinements, Max HP +300, Max SP +10. If base VIT is 120 or higher, Max HP +8%.",0]
 ,[1553,0,0,"Temporal AGI Boots","For every 3 refinements, Max HP +100, Max SP +10, and Aspd +3% (delay after attack decreases by 3%). If base AGI is 120 or higher, Aspd +1.",0]
 ,[1554,0,0,"Glove of Sura","If base STR >= 120, ATK+30.",0]
+,[1555,0,0,"Fallen Angel Wing","All stats +1.<br/>Every 20 base STR, ATK +1.<br/>Every 20 base INT, MATK +1.<br/>Every 20 base VIT, Neutral resistance +1%.<br/>Every 20 base AGI, ASPD by 1%.<br/>Every 20 base DEX, ranged damage by 1%.<br/>Every 20 base LUK, Increase Critical damage by 1%.",0]
+,[1556,0,0,"Old Camouflage Rabbit Hood","All Stats + 1.<br/>Each refine increase ranged physical damage by 1%.<br/>Each 3 refine increase Perfect Dodge + 1.<br/>Each 2 refine increase Max HP, Max SP 1%.<br/>Each 2 refine inflict 15% more damage with Cluster Bomb.<br/>Each 2 refine inflict 10% more damage with Warg Strike.",0]
+,[1557,0,0,"Old Rune Circlet","All Stats + 1. MDEF+ 5.<br/>Each refine increase ATK + 4.<br/>Each 5 refines increase ASPD + 1.<br/>Each 2 refine increase Max HP, Max SP 1%.<br/>Each 2 refine inflict 20% more damage with Ignition Break.<br/>Each 2 refines inflict 15% more damage with Hundred Spear.",0]
+,[1558,0,0,"Old Mitra","All Stats + 1. MDEF+ 5.<br/>Each refine increase MATK + 2, ATK + 4, heal + 2%.<br/>Each 2 refine increase Max HP, Max SP 1%.<br/>Each 2 refine inflict 20% more damage with Judex.<br/>Each 2 refine inflict 10% more damage with Magnus Exorcismus.",0]
 ]
 };

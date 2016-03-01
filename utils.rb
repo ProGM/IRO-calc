@@ -29,7 +29,7 @@ def find_item_last_position(text)
 end
 
 def find_item_last_id(text, position)
-  /,\[([0-9]+)/.match(text[position, -1])
+  /,\[([0-9]+)/.match(text[position..-1])[1]
 end
 
 def find_next_line_position(text, position)
@@ -41,23 +41,7 @@ def parse_text_script(string)
     .map! { |command| command.to_s.split(/[\s,]/) }
 end
 
-COMMANDS_MAPPING = {
-  ['bonus', 'bAllStats', /\A[0-9]+\Z/] => ['bon_ALL_STATS', '$1'],
-  ['bonus', 'bDex', /\A[0-9]+\Z/] => ['bon_DEX', '$1'],
-  ['bonus', 'bInt', /\A[0-9]+\Z/] => ['bon_INT', '$1'],
-  ['bonus', 'bStr', /\A[0-9]+\Z/] => ['bon_STR', '$1'],
-  ['bonus', 'bAgi', /\A[0-9]+\Z/] => ['bon_AGI', '$1'],
-  ['bonus', 'bLuk', /\A[0-9]+\Z/] => ['bon_LUK', '$1'],
-  ['bonus', 'bBaseAtk', /\A[0-9]+\Z/] => ['bon_ATK', '$1'],
-  ['bonus', 'bMaxHPrate', /\A[0-9]+\Z/] => ['bon_HP_MUL', '$1'],
-  ['bonus', 'bMaxSPrate', /\A[0-9]+\Z/] => ['bon_SP_MUL', '$1'],
-  ['bonus', 'bMaxHP', /\A[0-9]+\Z/] => ['bon_HP_ADD', '$1'],
-  ['bonus', 'bMaxSP', /\A[0-9]+\Z/] => ['bon_SP_ADD', '$1'],
-  ['bonus', 'bDef', /\A[0-9]+\Z/] => ['bon_DEF', '$1'],
-  ['bonus', 'bMdef', /\A[0-9]+\Z/] => ['bon_MDEF', '$1'],
-  ['bonus', 'bHealPower', /\A[0-9]+\Z/] => ['bon_HEAL_MUL', '$1'],
-  ['bonus', 'bDelayRate', /\A[0-9]+\Z/] => ['bon_RED_CASTDELAY', lambda { |params| -params[i].to_i }],
-}
+require './mapping_database.rb'
 
 def parse_commands(command_list)
   command_list.map do |command|

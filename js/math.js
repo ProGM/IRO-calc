@@ -25,11 +25,10 @@ function Between(x, y, z)
 
 function sort(work)
 { // Bubble Sort ... (recursion doesn't work with js)
-	
 	var num=0;
 	if(Language != 0)
 		num = Language * 2 + 1;
-	
+
 	for(var i=1;work[i]!="EOF";i++)
 	{
 		for(var k=i;k>0;k--)

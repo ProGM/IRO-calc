@@ -1556,6 +1556,10 @@
 ,[1552,itm_type_SHOES,0,20,0,1,60,10,bon_HP_ADD,300,bon_SP_ADD,30,bon_NONE] // Temporal VIT Boots
 ,[1553,itm_type_SHOES,0,20,0,1,60,10,bon_HP_ADD,300,bon_SP_ADD,30,bon_ASPD_MUL,3,bon_NONE] // Temporal AGI Boots
 ,[1554,itm_type_ACCESSORY,2115,20,0,1,60,10,bon_STR,5,bon_SP_MUL,6,bon_HP_MUL,-6,bon_NONE] // Glove of Sura
+,[1555,itm_type_GARMENT,0,20,0,1,60,10,bon_SCRIPT,'{ bonus bAllStats,1; bonus bAtk,readparam(bStr)/20; bonus bMatk,readparam(bInt)/20; bonus2 bSubEle,Ele_Neutral,readparam(bVit)/20; bonus bLongAtkRate,readparam(bDex)/20; bonus bCritAtkRate,readparam(bLuk)/20; }',bon_NONE] // Fallen Angel Wings
+,[1556,itm_type_HEAD_UPPER,0,10,0,1,10,170,bon_SCRIPT,'{ bonus bAllStats,1; .@r = getrefine(); bonus bMaxHPrate,.@r/2; bonus bMaxSPrate,.@r/2; bonus bLongAtkRate,.@r; bonus bFlee2,.@r/3; bonus2 bSkillAtk,"RA_CLUSTERBOMB",15*.@r/2; bonus2 bSkillAtk,"RA_WUGSTRIKE",10*.@r/2; }',bon_NONE] // Camouflage Rabbit Hood
+,[1557,itm_type_HEAD_UPPER,0,10,0,1,10,170,bon_SCRIPT,'{ bonus bAllStats,1; bonus bMdef,5; .@r = getrefine(); bonus bBaseAtk,4*.@r; bonus bAspd,.@r/5; bonus bMaxHPrate,.@r/2; bonus bMaxSPrate,.@r/2; bonus2 bSkillAtk,"RK_IGNITIONBREAK",20*.@r/2; bonus2 bSkillAtk,"RK_HUNDREDSPEAR",15*.@r/2; }',bon_NONE] // Old Rune Circlet
+,[1558,itm_type_HEAD_UPPER,0,10,0,1,10,170,bon_SCRIPT,'{ bonus bAllStats,1; bonus bMdef,5; .@r = getrefine(); bonus bMatk,2*.@r; bonus bBaseAtk,4*.@r; bonus bHealPower,.@r; bonus bMaxHPrate,.@r/2; bonus bMaxSPrate,.@r/2; bonus2 bSkillAtk,"AB_JUDEX",20*.@r/2; bonus2 bSkillAtk,"PR_MAGNUS",10*.@r/2; }',bon_NONE] // Old Mitra
 ];
 ItemMax = ItemOBJ.length -1;
 }

@@ -113,7 +113,7 @@ var kDmgTypeMelee = 0;
 var kDmgTypeRanged = 1;
 var kDmgTypeMagic = 2;
 }
-  // Bonuses (from Equip and Cards)/ Stats/ SubStats 
+  // Bonuses (from Equip and Cards)/ Stats/ SubStats
 { // n_tok[%] - StPlusCalc2(%) - StPlusCard(%) - StPlusWeapon(%)
 bon_NONE = 0;
 bon_STR = 1;
@@ -229,7 +229,7 @@ bon_HEAL_REC = 92; // Increased incoming Heal and Items
 bon_HEAL_UNDEAD = 93; // Increases OffensiveHeal
 bon_SANC_MUL = 94; // radwisdom, gloCureWand, diaRing - don't get it
 // = 95; // free
-//94: +% [Sanctuary] Effectiveness 
+//94: +% [Sanctuary] Effectiveness
 //95: +% [Sanctuary] Effectiveness on Self
 bon_HEAL_UNDEADII = 96; // see 93 ?
 // = 97; // free
@@ -347,7 +347,7 @@ bon_DEFIGN_RC_DEMI_HUMAN = 307;
 bon_DEFIGN_RC_ANGEL = 308;
 bon_DEFIGN_RC_DRAGON = 309;
 
-// [ +% MDef-ignore on Race 310: Formless 
+// [ +% MDef-ignore on Race 310: Formless
 bon_MDEFIGN_RC_FORMLESS = 310;
 bon_MDEFIGN_RC_UNDEAD = 311;
 bon_MDEFIGN_RC_BRUTE = 312;
@@ -359,7 +359,7 @@ bon_MDEFIGN_RC_DEMI_HUMAN = 317;
 bon_MDEFIGN_RC_ANGEL = 318;
 bon_MDEFIGN_RC_DRAGON = 319;
 
-// [ +% Critical Damage on Race 320: Formless 
+// [ +% Critical Damage on Race 320: Formless
 bon_CRIT_DMG_RC_FORMLESS = 320;
 bon_CRIT_DMG_RC_UNDEAD = 321;
 bon_CRIT_DMG_RC_BRUTE = 322;
@@ -395,15 +395,15 @@ bon_INC_MAGIC_DARK = 347;
 bon_INC_MAGIC_GHOST = 348;
 bon_INC_MAGIC_UNDEAD = 349;
 
-// [ +% Damage on Single MonsterID: (BonusID - 1000) 1000 - 2999 ] 
+// [ +% Damage on Single MonsterID: (BonusID - 1000) 1000 - 2999 ]
 bon_DMG_MONSTER = 1000;
 bon_DMG_SPE_CRAB = 1072;
 bon_DMG_SPE_ASTER = 1240;
 bon_DMG_SPE_BONGUN = 1275;
 
-// [ +% Resistance from Single MonsterID: (BonusID - 3000) 3000 - 4999 ] 
+// [ +% Resistance from Single MonsterID: (BonusID - 3000) 3000 - 4999 ]
 bon_RED_MONSTER = 3000;
-// [ +% Damage with SkillID: (BonusID - 5000) 5000 - 6999 ] 
+// [ +% Damage with SkillID: (BonusID - 5000) 5000 - 6999 ]
 bon_DMG_SKILL = 5000;
 // [ +% Cast Time Reduction with SkillID: (BonusID - 7000) 7000-8999 ]
 bon_CAST_SKILL = 7000;
@@ -415,8 +415,9 @@ bon_DELAY_SKILL_FLAT = 11000;
 //EnablesSkills 220, 221 // IceFalch & FBlend
 bon_SKILL_ENABLE = 220;
 bon_SKILL_AUTOCAST = 221;
-// ^ ColdBolt, FireBolt, Bash, TStorm, TU, 
+// ^ ColdBolt, FireBolt, Bash, TStorm, TU,
 
+bon_SCRIPT = 222;
 }
 
 { // ASPD-Pots

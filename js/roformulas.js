@@ -157,6 +157,7 @@ function calcAttackSpecialBoosts() {
 function CalcAtk()
 {
 	ClearBonuses();
+	LoadStatsFromScripts();
 
 	// Calc pieces of attack formula
 	statusAttack = CalcStatAtk();
@@ -184,6 +185,7 @@ function CalcAtk()
 	CalcRangedMod();
 	CalcSpecialRacialMod();
 	CalcSizeMod();
+
 	if ( n_A_WeaponType != weapTyp_BOW &&
 		 n_A_WeaponType != weapTyp_INSTRU &&
 		 n_A_WeaponType != weapTyp_WHIP &&

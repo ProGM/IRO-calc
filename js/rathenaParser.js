@@ -162,29 +162,30 @@ rathena_parser = (function() {
         peg$c53 = { type: "class", value: "[\\\"]", description: "[\\\"]" },
         peg$c54 = /^[A-Z_]/,
         peg$c55 = { type: "class", value: "[A-Z_]", description: "[A-Z_]" },
-        peg$c56 = function() { return text(); },
-        peg$c57 = /^[A-Za-z_]/,
-        peg$c58 = { type: "class", value: "[A-Za-z_]", description: "[A-Za-z_]" },
-        peg$c59 = "b",
-        peg$c60 = { type: "literal", value: "b", description: "\"b\"" },
-        peg$c61 = /^[A-Z]/,
-        peg$c62 = { type: "class", value: "[A-Z]", description: "[A-Z]" },
-        peg$c63 = /^[A-Za-z]/,
-        peg$c64 = { type: "class", value: "[A-Za-z]", description: "[A-Za-z]" },
-        peg$c65 = function(expr) { return expr; },
-        peg$c66 = /^[a-zA-Z0-9\/().@+*\-]/,
-        peg$c67 = { type: "class", value: "[a-zA-Z0-9\\/().@+*-]", description: "[a-zA-Z0-9\\/().@+*-]" },
-        peg$c68 = { type: "other", description: "integer" },
-        peg$c69 = /^[0-9]/,
-        peg$c70 = { type: "class", value: "[0-9]", description: "[0-9]" },
-        peg$c71 = function() { return parseInt(text(), 10); },
-        peg$c72 = { type: "other", description: "whitespace" },
-        peg$c73 = /^[ \t\n\r]/,
-        peg$c74 = { type: "class", value: "[ \\t\\n\\r]", description: "[ \\t\\n\\r]" },
-        peg$c75 = /^[,]/,
-        peg$c76 = { type: "class", value: "[,]", description: "[,]" },
-        peg$c77 = "=",
-        peg$c78 = { type: "literal", value: "=", description: "\"=\"" },
+        peg$c56 = function(name) { return name.join(''); },
+        peg$c57 = function() { return text(); },
+        peg$c58 = /^[A-Za-z_]/,
+        peg$c59 = { type: "class", value: "[A-Za-z_]", description: "[A-Za-z_]" },
+        peg$c60 = "b",
+        peg$c61 = { type: "literal", value: "b", description: "\"b\"" },
+        peg$c62 = /^[A-Z]/,
+        peg$c63 = { type: "class", value: "[A-Z]", description: "[A-Z]" },
+        peg$c64 = /^[A-Za-z]/,
+        peg$c65 = { type: "class", value: "[A-Za-z]", description: "[A-Za-z]" },
+        peg$c66 = /^[0-9]/,
+        peg$c67 = { type: "class", value: "[0-9]", description: "[0-9]" },
+        peg$c68 = function(expr) { return expr; },
+        peg$c69 = /^[a-zA-Z0-9\/().@+*\-]/,
+        peg$c70 = { type: "class", value: "[a-zA-Z0-9\\/().@+*-]", description: "[a-zA-Z0-9\\/().@+*-]" },
+        peg$c71 = { type: "other", description: "integer" },
+        peg$c72 = function() { return parseInt(text(), 10); },
+        peg$c73 = { type: "other", description: "whitespace" },
+        peg$c74 = /^[ \t\n\r]/,
+        peg$c75 = { type: "class", value: "[ \\t\\n\\r]", description: "[ \\t\\n\\r]" },
+        peg$c76 = /^[,]/,
+        peg$c77 = { type: "class", value: "[,]", description: "[,]" },
+        peg$c78 = "=",
+        peg$c79 = { type: "literal", value: "=", description: "\"=\"" },
 
         peg$currPos          = 0,
         peg$savedPos         = 0,
@@ -1069,6 +1070,9 @@ rathena_parser = (function() {
             s5 = peg$parsecomma();
             if (s5 !== peg$FAILED) {
               s6 = peg$parseKeyword();
+              if (s6 === peg$FAILED) {
+                s6 = peg$parseString();
+              }
               if (s6 !== peg$FAILED) {
                 s7 = peg$parsecomma();
                 if (s7 !== peg$FAILED) {
@@ -1421,7 +1425,7 @@ rathena_parser = (function() {
           }
           if (s3 !== peg$FAILED) {
             peg$savedPos = s0;
-            s1 = peg$c56();
+            s1 = peg$c56(s2);
             s0 = s1;
           } else {
             peg$currPos = s0;
@@ -1467,7 +1471,7 @@ rathena_parser = (function() {
       }
       if (s1 !== peg$FAILED) {
         peg$savedPos = s0;
-        s1 = peg$c56();
+        s1 = peg$c57();
       }
       s0 = s1;
 
@@ -1479,22 +1483,22 @@ rathena_parser = (function() {
 
       s0 = peg$currPos;
       s1 = [];
-      if (peg$c57.test(input.charAt(peg$currPos))) {
+      if (peg$c58.test(input.charAt(peg$currPos))) {
         s2 = input.charAt(peg$currPos);
         peg$currPos++;
       } else {
         s2 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c58); }
+        if (peg$silentFails === 0) { peg$fail(peg$c59); }
       }
       if (s2 !== peg$FAILED) {
         while (s2 !== peg$FAILED) {
           s1.push(s2);
-          if (peg$c57.test(input.charAt(peg$currPos))) {
+          if (peg$c58.test(input.charAt(peg$currPos))) {
             s2 = input.charAt(peg$currPos);
             peg$currPos++;
           } else {
             s2 = peg$FAILED;
-            if (peg$silentFails === 0) { peg$fail(peg$c58); }
+            if (peg$silentFails === 0) { peg$fail(peg$c59); }
           }
         }
       } else {
@@ -1502,7 +1506,7 @@ rathena_parser = (function() {
       }
       if (s1 !== peg$FAILED) {
         peg$savedPos = s0;
-        s1 = peg$c56();
+        s1 = peg$c57();
       }
       s0 = s1;
 
@@ -1514,47 +1518,62 @@ rathena_parser = (function() {
 
       s0 = peg$currPos;
       if (input.charCodeAt(peg$currPos) === 98) {
-        s1 = peg$c59;
+        s1 = peg$c60;
         peg$currPos++;
       } else {
         s1 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c60); }
+        if (peg$silentFails === 0) { peg$fail(peg$c61); }
       }
       if (s1 !== peg$FAILED) {
-        if (peg$c61.test(input.charAt(peg$currPos))) {
+        if (peg$c62.test(input.charAt(peg$currPos))) {
           s2 = input.charAt(peg$currPos);
           peg$currPos++;
         } else {
           s2 = peg$FAILED;
-          if (peg$silentFails === 0) { peg$fail(peg$c62); }
+          if (peg$silentFails === 0) { peg$fail(peg$c63); }
         }
         if (s2 !== peg$FAILED) {
           s3 = [];
-          if (peg$c63.test(input.charAt(peg$currPos))) {
+          if (peg$c64.test(input.charAt(peg$currPos))) {
             s4 = input.charAt(peg$currPos);
             peg$currPos++;
           } else {
             s4 = peg$FAILED;
-            if (peg$silentFails === 0) { peg$fail(peg$c64); }
+            if (peg$silentFails === 0) { peg$fail(peg$c65); }
           }
           if (s4 !== peg$FAILED) {
             while (s4 !== peg$FAILED) {
               s3.push(s4);
-              if (peg$c63.test(input.charAt(peg$currPos))) {
+              if (peg$c64.test(input.charAt(peg$currPos))) {
                 s4 = input.charAt(peg$currPos);
                 peg$currPos++;
               } else {
                 s4 = peg$FAILED;
-                if (peg$silentFails === 0) { peg$fail(peg$c64); }
+                if (peg$silentFails === 0) { peg$fail(peg$c65); }
               }
             }
           } else {
             s3 = peg$FAILED;
           }
           if (s3 !== peg$FAILED) {
-            peg$savedPos = s0;
-            s1 = peg$c56();
-            s0 = s1;
+            if (peg$c66.test(input.charAt(peg$currPos))) {
+              s4 = input.charAt(peg$currPos);
+              peg$currPos++;
+            } else {
+              s4 = peg$FAILED;
+              if (peg$silentFails === 0) { peg$fail(peg$c67); }
+            }
+            if (s4 === peg$FAILED) {
+              s4 = null;
+            }
+            if (s4 !== peg$FAILED) {
+              peg$savedPos = s0;
+              s1 = peg$c57();
+              s0 = s1;
+            } else {
+              peg$currPos = s0;
+              s0 = peg$FAILED;
+            }
           } else {
             peg$currPos = s0;
             s0 = peg$FAILED;
@@ -1578,7 +1597,7 @@ rathena_parser = (function() {
       s1 = peg$parseEvaluatedExpression();
       if (s1 !== peg$FAILED) {
         peg$savedPos = s0;
-        s1 = peg$c65(s1);
+        s1 = peg$c68(s1);
       }
       s0 = s1;
 
@@ -1588,42 +1607,6 @@ rathena_parser = (function() {
     function peg$parseEvaluatedExpression() {
       var s0, s1, s2;
 
-      s0 = peg$currPos;
-      s1 = [];
-      if (peg$c66.test(input.charAt(peg$currPos))) {
-        s2 = input.charAt(peg$currPos);
-        peg$currPos++;
-      } else {
-        s2 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c67); }
-      }
-      if (s2 !== peg$FAILED) {
-        while (s2 !== peg$FAILED) {
-          s1.push(s2);
-          if (peg$c66.test(input.charAt(peg$currPos))) {
-            s2 = input.charAt(peg$currPos);
-            peg$currPos++;
-          } else {
-            s2 = peg$FAILED;
-            if (peg$silentFails === 0) { peg$fail(peg$c67); }
-          }
-        }
-      } else {
-        s1 = peg$FAILED;
-      }
-      if (s1 !== peg$FAILED) {
-        peg$savedPos = s0;
-        s1 = peg$c56();
-      }
-      s0 = s1;
-
-      return s0;
-    }
-
-    function peg$parseInteger() {
-      var s0, s1, s2;
-
-      peg$silentFails++;
       s0 = peg$currPos;
       s1 = [];
       if (peg$c69.test(input.charAt(peg$currPos))) {
@@ -1649,13 +1632,49 @@ rathena_parser = (function() {
       }
       if (s1 !== peg$FAILED) {
         peg$savedPos = s0;
-        s1 = peg$c71();
+        s1 = peg$c57();
+      }
+      s0 = s1;
+
+      return s0;
+    }
+
+    function peg$parseInteger() {
+      var s0, s1, s2;
+
+      peg$silentFails++;
+      s0 = peg$currPos;
+      s1 = [];
+      if (peg$c66.test(input.charAt(peg$currPos))) {
+        s2 = input.charAt(peg$currPos);
+        peg$currPos++;
+      } else {
+        s2 = peg$FAILED;
+        if (peg$silentFails === 0) { peg$fail(peg$c67); }
+      }
+      if (s2 !== peg$FAILED) {
+        while (s2 !== peg$FAILED) {
+          s1.push(s2);
+          if (peg$c66.test(input.charAt(peg$currPos))) {
+            s2 = input.charAt(peg$currPos);
+            peg$currPos++;
+          } else {
+            s2 = peg$FAILED;
+            if (peg$silentFails === 0) { peg$fail(peg$c67); }
+          }
+        }
+      } else {
+        s1 = peg$FAILED;
+      }
+      if (s1 !== peg$FAILED) {
+        peg$savedPos = s0;
+        s1 = peg$c72();
       }
       s0 = s1;
       peg$silentFails--;
       if (s0 === peg$FAILED) {
         s1 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c68); }
+        if (peg$silentFails === 0) { peg$fail(peg$c71); }
       }
 
       return s0;
@@ -1666,27 +1685,27 @@ rathena_parser = (function() {
 
       peg$silentFails++;
       s0 = [];
-      if (peg$c73.test(input.charAt(peg$currPos))) {
+      if (peg$c74.test(input.charAt(peg$currPos))) {
         s1 = input.charAt(peg$currPos);
         peg$currPos++;
       } else {
         s1 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c74); }
+        if (peg$silentFails === 0) { peg$fail(peg$c75); }
       }
       while (s1 !== peg$FAILED) {
         s0.push(s1);
-        if (peg$c73.test(input.charAt(peg$currPos))) {
+        if (peg$c74.test(input.charAt(peg$currPos))) {
           s1 = input.charAt(peg$currPos);
           peg$currPos++;
         } else {
           s1 = peg$FAILED;
-          if (peg$silentFails === 0) { peg$fail(peg$c74); }
+          if (peg$silentFails === 0) { peg$fail(peg$c75); }
         }
       }
       peg$silentFails--;
       if (s0 === peg$FAILED) {
         s1 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c72); }
+        if (peg$silentFails === 0) { peg$fail(peg$c73); }
       }
 
       return s0;
@@ -1695,12 +1714,12 @@ rathena_parser = (function() {
     function peg$parsecomma() {
       var s0;
 
-      if (peg$c75.test(input.charAt(peg$currPos))) {
+      if (peg$c76.test(input.charAt(peg$currPos))) {
         s0 = input.charAt(peg$currPos);
         peg$currPos++;
       } else {
         s0 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c76); }
+        if (peg$silentFails === 0) { peg$fail(peg$c77); }
       }
 
       return s0;
@@ -1710,11 +1729,11 @@ rathena_parser = (function() {
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 61) {
-        s0 = peg$c77;
+        s0 = peg$c78;
         peg$currPos++;
       } else {
         s0 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c78); }
+        if (peg$silentFails === 0) { peg$fail(peg$c79); }
       }
 
       return s0;
