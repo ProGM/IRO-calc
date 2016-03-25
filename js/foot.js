@@ -1368,17 +1368,43 @@ function LoadStatsFromScripts()
 { // Additional [Stats] by equip
 	for ( var i = 0; i <= 20; i++ )
 	{	 // for each equip/ card
-		if (ItemOBJ[n_A_Equip[i]][itm_BONUS_START] === bon_SCRIPT) {
-			var effects = parseItemEffects(ItemOBJ[n_A_Equip[i]][itm_BONUS_START + 1], { type: ItemOBJ[n_A_Equip[i]][itm_TYPE] });
-			for (var key in effects) {
-				if (key > 450) {
-					n_tok[key] = effects[key];
-				} else {
-					n_tok[key] += effects[key];
+		for ( var j = 0; ItemOBJ[n_A_Equip[i]][j + itm_BONUS_START] != bon_NONE; j += 2 )
+		{
+			if (ItemOBJ[n_A_Equip[i]][j + itm_BONUS_START] === bon_SCRIPT)
+			{
+				var effects = parseItemEffects(ItemOBJ[n_A_Equip[i]][j + itm_BONUS_START + 1], { type: ItemOBJ[n_A_Equip[i]][itm_TYPE] });
+				for (var key in effects) {
+					if (key > 450) {
+						n_tok[key] = effects[key];
+					} else {
+						n_tok[key] += effects[key];
+					}
 				}
 			}
 		}
 	}
+	for(var i=0;i<=25;i++)
+	{
+		for (var k=0; k<cardOBJ.length; k++)
+		{
+			if (n_A_card[i] === cardOBJ[k][0])
+			{
+				for (var j=0;cardOBJ[k][j +4] != 0;j += 2)
+				{
+					if (cardOBJ[k][j + 4] === bon_SCRIPT)
+					{
+						var effects = parseItemEffects(cardOBJ[j][j + 5], { type: cardOBJ[j][itm_TYPE] });
+						for (var key in effects)
+						{
+							if (key > 450) n_tok[key] = effects[key];
+							else n_tok[key] += effects[key];
+						}
+					}
+				}
+			}
+		}
+	}
+
 }
 
 
@@ -1387,10 +1413,15 @@ function StPlusCard( nSTP2 )
 	var w=0;
 	for(var i=0;i<=25;i++)
 	{
-		for(var j=0;cardOBJ[n_A_card[i]][j +4] != 0;j += 2)
+		for (var k=0; k<cardOBJ.length; k++)
 		{
-			if(nSTP2 == cardOBJ[n_A_card[i]][j +4])
-				w += cardOBJ[n_A_card[i]][j +5];
+			if (n_A_card[i] === cardOBJ[k][0])
+			{
+				for (var j=0;cardOBJ[k][j +4] != 0;j += 2)
+				{
+					if(nSTP2 == cardOBJ[k][j +4]) w += cardOBJ[k][j +5];
+				}
+			}
 		}
 	}
 
@@ -1926,29 +1957,29 @@ function ActiveSkillSetPlus()
 	}
 
 	for ( var i = 0; i <= 25; i++ )
-	{
-		for(j2=0;cardOBJ[n_A_card[i]][4+j2] != 0;j2 += 2)
-		{
-			if(cardOBJ[n_A_card[i]][4+j2] == 220)
-			{
-				if(InsertSkill[cardOBJ[n_A_card[i]][5+j2]][1] == 1)
+		for (var k=0; k<cardOBJ.length; k++)
+			if (n_A_card[i] === cardOBJ[k][0])
+				for(j2=0;cardOBJ[k][4+j2] != 0;j2 += 2)
 				{
-					w_ASSP0[j] = InsertSkill[cardOBJ[n_A_card[i]][5+j2]][2];
-					w_ASSP9[j] = cardOBJ[n_A_card[i]][5+j2] + 3000;
-					j++;
+					if(cardOBJ[k][4+j2] == 220)
+					{
+						if(InsertSkill[cardOBJ[k][5+j2]][1] == 1)
+						{
+							w_ASSP0[j] = InsertSkill[cardOBJ[k][5+j2]][2];
+							w_ASSP9[j] = cardOBJ[k][5+j2] + 3000;
+							j++;
+						}
+					}
+					else if(cardOBJ[k][4+j2] == 221)
+					{
+						if(AutoSpellSkill[cardOBJ[k][5+j2]][1] == 1)
+						{
+							w_ASSP0[j] = AutoSpellSkill[cardOBJ[k][5+j2]][2];
+							w_ASSP9[j] = cardOBJ[k][5+j2] + 2000;
+							j++;
+						}
+					}
 				}
-			}
-			else if(cardOBJ[n_A_card[i]][4+j2] == 221)
-			{
-				if(AutoSpellSkill[cardOBJ[n_A_card[i]][5+j2]][1] == 1)
-				{
-					w_ASSP0[j] = AutoSpellSkill[cardOBJ[n_A_card[i]][5+j2]][2];
-					w_ASSP9[j] = cardOBJ[n_A_card[i]][5+j2] + 2000;
-					j++;
-				}
-			}
-		}
-	}
 	if(CardNumSearch(card_WEPN_LADYSOLAC) && (n_A_JOB == 9 || n_A_JOB == 23)) //Lady Solace
 	{
 		w_ASSP0[j] = 162;
@@ -2419,35 +2450,41 @@ function Init()
 
 	var wLang = Language * 2;
 
-	for ( var i = 0; CardSortOBJ[0][i] != "NULL"; i++ )
-	{ // WeaponSlot1
-		document.calcForm.A_weapon1_card1.options[i] = new Option( cardOBJ[CardSortOBJ[card_comp_NONE][i]][2], CardSortOBJ[card_comp_NONE][i] );
+	for ( var i = 0; CardSortOBJ[1][i] != "NULL"; i++ )
+	{ // WeaponSlot1-4
+		for (var j=0; j<cardOBJ.length; j++) if (CardSortOBJ[1][i] === cardOBJ[j][0])
+		{
+			document.calcForm.A_weapon1_card1.options[i] = new Option(cardOBJ[j][2],CardSortOBJ[card_comp_WEAPON][i]);
+			document.calcForm.A_weapon1_card2.options[i] = new Option(cardOBJ[j][2],CardSortOBJ[card_comp_WEAPON][i]);
+			document.calcForm.A_weapon1_card3.options[i] = new Option(cardOBJ[j][2],CardSortOBJ[card_comp_WEAPON][i]);
+			document.calcForm.A_weapon1_card4.options[i] = new Option(cardOBJ[j][2],CardSortOBJ[card_comp_WEAPON][i]);
+		}
 	}
-	for ( var i = 0;CardSortOBJ[1][i]!="NULL";i++)
-	{ // WeaponSlot2-4
-		document.calcForm.A_weapon1_card2.options[i] = new Option(cardOBJ[CardSortOBJ[card_comp_WEAPON][i]][2],CardSortOBJ[card_comp_WEAPON][i]);
-		document.calcForm.A_weapon1_card3.options[i] = new Option(cardOBJ[CardSortOBJ[card_comp_WEAPON][i]][2],CardSortOBJ[card_comp_WEAPON][i]);
-		document.calcForm.A_weapon1_card4.options[i] = new Option(cardOBJ[CardSortOBJ[card_comp_WEAPON][i]][2],CardSortOBJ[card_comp_WEAPON][i]);
-	}
-	document.calcForm.A_weapon1_card4.options[4] = new Option(GetWord(91),106); // "Top10Rank"
+//	document.calcForm.A_weapon1_card4.options[4] = new Option(GetWord(91),106); // "Top10Rank"
 
 	for ( var i=0;CardSortOBJ[2][i]!="NULL";i++ )
 	{ // HeadCard
-		document.calcForm.A_head1_card.options[i] = new Option(cardOBJ[CardSortOBJ[card_comp_HEAD][i]][2],CardSortOBJ[card_comp_HEAD][i]);
-		document.calcForm.A_head2_card.options[i] = new Option(cardOBJ[CardSortOBJ[card_comp_HEAD][i]][2],CardSortOBJ[card_comp_HEAD][i]);
+		for (var j=0; j<cardOBJ.length; j++) if (CardSortOBJ[2][i] === cardOBJ[j][0])
+		{
+			document.calcForm.A_head1_card.options[i] = new Option(cardOBJ[j][2],CardSortOBJ[card_comp_HEAD][i]);
+			document.calcForm.A_head2_card.options[i] = new Option(cardOBJ[j][2],CardSortOBJ[card_comp_HEAD][i]);
+		}
 	}
 	for(i=0;CardSortOBJ[3][i]!="NULL";i++) // Shield-/ LeftHandCard
-		document.calcForm.A_left_card.options[i] = new Option(cardOBJ[CardSortOBJ[card_com_SHIELD][i]][2],CardSortOBJ[card_com_SHIELD][i]);
+		for (var j=0; j<cardOBJ.length; j++) if (CardSortOBJ[3][i] === cardOBJ[j][0]) document.calcForm.A_left_card.options[i] = new Option(cardOBJ[j][2],CardSortOBJ[card_com_SHIELD][i]);
 	for(i=0;CardSortOBJ[4][i]!="NULL";i++) // ArmorCard
-		document.calcForm.A_body_card.options[i] = new Option(cardOBJ[CardSortOBJ[card_com_ARMOR][i]][2],CardSortOBJ[card_com_ARMOR][i]);
+		for (var j=0; j<cardOBJ.length; j++) if (CardSortOBJ[4][i] === cardOBJ[j][0]) document.calcForm.A_body_card.options[i] = new Option(cardOBJ[j][2],CardSortOBJ[card_com_ARMOR][i]);
 	for(i=0;CardSortOBJ[5][i]!="NULL";i++) // GarmentCard
-		document.calcForm.A_shoulder_card.options[i] = new Option(cardOBJ[CardSortOBJ[card_com_GARMENT][i]][2],CardSortOBJ[card_com_GARMENT][i]);
+		for (var j=0; j<cardOBJ.length; j++) if (CardSortOBJ[5][i] === cardOBJ[j][0]) document.calcForm.A_shoulder_card.options[i] = new Option(cardOBJ[j][2],CardSortOBJ[card_com_GARMENT][i]);
 	for(i=0;CardSortOBJ[6][i]!="NULL";i++) // ShoesCard
-		document.calcForm.A_shoes_card.options[i] = new Option(cardOBJ[CardSortOBJ[card_com_SHOES][i]][2],CardSortOBJ[card_com_SHOES][i]);
+		for (var j=0; j<cardOBJ.length; j++) if (CardSortOBJ[6][i] === cardOBJ[j][0]) document.calcForm.A_shoes_card.options[i] = new Option(cardOBJ[j][2],CardSortOBJ[card_com_SHOES][i]);
 	for(i=0;CardSortOBJ[7][i]!="NULL";i++)
 	{ // AccessoryCards
-		document.calcForm.A_acces1_card.options[i] = new Option(cardOBJ[CardSortOBJ[card_com_ACC][i]][2],CardSortOBJ[card_com_ACC][i]);
-		document.calcForm.A_acces2_card.options[i] = new Option(cardOBJ[CardSortOBJ[card_com_ACC][i]][2],CardSortOBJ[card_com_ACC][i]);
+		for (var j=0; j<cardOBJ.length; j++) if (CardSortOBJ[7][i] === cardOBJ[j][0])
+		{
+			document.calcForm.A_acces1_card.options[i] = new Option(cardOBJ[j][2],CardSortOBJ[card_com_ACC][i]);
+			document.calcForm.A_acces2_card.options[i] = new Option(cardOBJ[j][2],CardSortOBJ[card_com_ACC][i]);
+		}
 	}
 
 	for(i=0;i<CardShort.length;i++) // CardShortcuts
@@ -2502,13 +2539,10 @@ function Init()
 		if ( ITEM_SP_TIME_OBJ[i][3] === 2 )
 		{
 			var str = "<b style=\"color:#7a7a7a\">(Special Effect: [" + ITEM_SP_TIME_OBJ[i][2] + "] can be activated under 'Miscellaneous Effects' in the Self &amp; Party Buffs section)</b>";
-			if ( cardOBJ[ITEM_SP_TIME_OBJ[i][4]][3] === 0 )
+			for (var j=0; j<cardOBJ.length; j++)
 			{
-				cardOBJ[ITEM_SP_TIME_OBJ[i][4]][3] = str;
-			}
-			else
-			{
-				cardOBJ[ITEM_SP_TIME_OBJ[i][4]][3] += "<BR>" + str;
+				if (cardOBJ[j][0] === ITEM_SP_TIME_OBJ[i][4]) if (cardOBJ[j][3] === 0) cardOBJ[j][3]=str;
+				else cardOBJ[j][3] += "<BR>" + str;
 			}
 		}
 	}

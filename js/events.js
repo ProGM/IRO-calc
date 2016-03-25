@@ -1816,7 +1816,7 @@ function Click_Card( CardIndex )
 	myInnerHtml("ITEM_LV","",0);
 	myInnerHtml("ITEM_WAIT","",0);
 
-	if(CardIndex == 106)
+	/*if(CardIndex == 106)
 	{ // StarCrumb
 		myInnerHtml("nm080","Very Strong or Top10",0);
 		var str = "A damaged piece of stars +5<BR>If the star piece is constant damage (?)";
@@ -1829,40 +1829,51 @@ function Click_Card( CardIndex )
 		myInnerHtml("nm080",cardOBJ[CardIndex][card_att_NAME],0);
 		myInnerHtml("B_SETUMEI", "[" + ZokuseiOBJ[CardIndex-200][Language] + "]" + GetWord(173),0);
 		return;
+	}*/
+	
+	for (var j=0; j<cardOBJ.length; j++) if (cardOBJ[j][0] == CardIndex)
+	{
+		if (CardIndex < 4000) myInnerHtml("nm080", cardOBJ[j][2],0);
+		else myInnerHtml("nm080", cardOBJ[j][2] + " Card (ID:" + CardIndex + ")",0);
+
+	
+		CBIstr = "";
+		var tempDesc = "";
+		for(i=card_att_BONUS_START;cardOBJ[j][i] != bon_NONE;i+=2) // Collect Bonusses
+			tempDesc += BuildItemDescription(cardOBJ[j][i],cardOBJ[j][i+1]); // add them to String
+		CBIstr += tempDesc;
+		if(cardOBJ[j][card_att_DESC] != 0)
+			CBIstr += cardOBJ[j][card_att_DESC] +"<BR>";
 	}
-	myInnerHtml("nm080",cardOBJ[CardIndex][card_att_NAME] +" Card",0);
-
-	CBIstr = "";
-	var tempDesc = "";
-	for(i=card_att_BONUS_START;cardOBJ[CardIndex][i] != bon_NONE;i+=2) // Collect Bonusses
-		tempDesc += BuildItemDescription(cardOBJ[CardIndex][i],cardOBJ[CardIndex][i+1]); // add them to String
-	CBIstr += tempDesc;
-	if(cardOBJ[CardIndex][card_att_DESC] != 0)
-		CBIstr += cardOBJ[CardIndex][card_att_DESC] +"<BR>";
-
-	var check = 0;
-	for(var i=card_att_BONUS_START;cardOBJ[CardIndex][i] != bon_NONE;i+=2){ // Check for Sets
-		if(cardOBJ[CardIndex][i] == 90){
-			CBIstr += "<Font size=2><BR><B>When equipping "+ SetCardName(cardOBJ[CardIndex][i+1]);
-			var w = w_SC[cardOBJ[CardIndex][i+1]][0];
-			while(cardOBJ[CardIndex][i+2] != bon_NONE && check == 0){
-				if(w == w_SE[cardOBJ[CardIndex][i+3]][0]){
-					CBIstr += " or<BR>"+ SetCardName(CardOBJ[CardIndex][i+3]);
-					i += 2;
-				}else
-					check = 1;
+	for (var j=0; j<cardOBJ.length; j++) if (cardOBJ[j][0] == CardIndex)
+	{
+		var check = 0;
+		for(var i=card_att_BONUS_START;cardOBJ[j][i] != bon_NONE;i+=2){ // Check for Sets
+			if(cardOBJ[j][i] == 90)
+			{
+				CBIstr += "<Font size=2><BR><B>When equipping "+ SetCardName(cardOBJ[j][i+1]);
+				var w = w_SC[cardOBJ[j][i+1]][0];
+				while(cardOBJ[j][i+2] != bon_NONE && check == 0){
+					if(w == w_SE[cardOBJ[j][i+3]][0]){
+						CBIstr += " or<BR>"+ SetCardName(CardOBJ[j][i+3]);
+						i += 2;
+					}else
+						check = 1;
+				}
+				CBIstr += " at the same time:<BR></B>";
+				check = 0;
+				for (var l=0; l<cardOBJ.length; l++) if (cardOBJ[l][0] == w)
+				{
+					for(var k=card_att_BONUS_START;cardOBJ[l][k] != bon_NONE;k+=2)
+						CBIstr += BuildItemDescription(cardOBJ[l][k],cardOBJ[l][k+1]);
+					if(cardOBJ[l][card_att_DESC] != bon_NONE) CBIstr += cardOBJ[l][card_att_DESC] +"<BR>";
+				}
+				CBIstr += "</Font>";
 			}
-			CBIstr += " at the same time:<BR>";
-			check = 0;
-			for(var j=card_att_BONUS_START;cardOBJ[w][j] != bon_NONE;j+=2)
-				BuildItemDescription(cardOBJ[w][j],cardOBJ[w][j+1]);
-			if(cardOBJ[w][card_att_DESC] != bon_NONE)
-				CBIstr += cardOBJ[w][card_att_DESC] +"<BR>";
-			CBIstr += "</Font></B>";
 		}
+	
+		myInnerHtml( "ItemDescription", CBIstr, 0 );
 	}
-
-	myInnerHtml( "ItemDescription", CBIstr, 0 );
 }
 
 function ChangeShortCut_R()

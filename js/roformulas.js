@@ -796,7 +796,7 @@ function CalcMasteryAtk()
 	var weaponOneCrumbs = 0;
 	for ( var i = 0; i < 4; i++ )
 	{
-		if ( n_A_card[i] === 106 )
+		if ( n_A_card[i] === 6 )
 		{
 			weaponOneCrumbs++;
 		}
@@ -819,7 +819,7 @@ function CalcMasteryAtk()
 	var weaponTwoCrumbs = 0;
 	for ( var i = 4; i < 8; i++ )
 	{
-		if ( n_A_card[i] === 106 )
+		if ( n_A_card[i] === 6 )
 		{
 			weaponTwoCrumbs++;
 		}
@@ -1257,7 +1257,7 @@ function CalcWeaponSizeMod()
 	// Cards
 	for ( var i = 0; i < 8; i++ )
 	{
-		if ( cardOBJ[n_A_card[i]][0] == 32 )
+		if ( n_A_card[i] == 32 )
 		{ // Drake card
 			weaponSizeMod = 1;
 			weapon2SizeMod = 1;
@@ -3792,7 +3792,7 @@ function getWeaponElement()
 			}
 		}
 		// pseudo cards (ele stones)
-		if ( 201 <= cardOBJ[n_A_card[card_loc_WEAPON_I]][card_att_ID] &&
+		/*if ( 201 <= cardOBJ[n_A_card[card_loc_WEAPON_I]][card_att_ID] &&
 			 cardOBJ[n_A_card[card_loc_WEAPON_I]][card_att_ID] <= 204 )
 		{
 			n_A_Weapon_element = cardOBJ[n_A_card[card_loc_WEAPON_I]][card_att_ID] -200;
@@ -3801,7 +3801,7 @@ function getWeaponElement()
 			 cardOBJ[n_A_card[card_loc_WEAPONII_I]][card_att_ID] <= 204 )
 		{
 			n_A_Weapon2_element = cardOBJ[n_A_card[card_loc_WEAPONII_I]][card_att_ID] -200;
-		}
+		}*/
 		if ( n_A_WeaponType==weapTyp_BOW ||
 			 ( weapTyp_HANDGUN <= n_A_WeaponType && n_A_WeaponType <= weapTyp_GRENADE_LAUNCHER ) )
 		{ // bows and guns

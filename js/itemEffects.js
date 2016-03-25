@@ -1,10 +1,10 @@
 { // TemporaryEffects (ITEM_SP_TIME_OBJ) + sort
 ITEM_SP_TIME_OBJ =[
-[0,"Temporary Card/Item Effects","none",0,0,0]
+[0,"Temporary Card/Item Effects","None",0,0,0] /*
 ,[1,"Isilla Card","Cast Time -50%,FLEE+30",2,472,9,30,0]
 ,[2,"Ice Titan Card","DEF+10",2,484,18,10,0]
-,[3,"Atroce Card","ASPD+100%",2,463,12,100,0]
-,[4,"Anolian Card","Improve Concentration Lv1",2,224,0]
+,[3,"Atroce Card","ASPD+100%",2,463,12,100,0] */
+,[4,"Anolian Card","Improve Concentration Lv1",2,4234,0] /*
 ,[5,"Alchemist Card Set","Adrenaline Rush (all weapons)",2,461,0]
 ,[6,"Assassin Damascus [Valor]","IcePick Effect",1,898,23,1,0]
 ,[7,"Ixion Wings","ASPD+7%",1,821,12,7,0]
@@ -45,10 +45,10 @@ ITEM_SP_TIME_OBJ =[
 ,[42,"Peurz set","ASPD+2",1,1505,bon_ASPD_ADD,2,0]
 ,[43,"Hahoe Mask + Witch's Pumpkin hat","ATK +50",1,1530,bon_ATK,50,0]
 ,[44,"Mace of Judgement","Dmg +20% vs. Demons",1,1537,bon_DMG_RC_DEMON,20,0]
-,[45,"Empowered Mace of Judgement","Dmg +40% vs. Demons",1,1541,bon_DMG_RC_DEMON,40,0]
+,[45,"Empowered Mace of Judgement","Dmg +40% vs. Demons",1,1541,bon_DMG_RC_DEMON,40,0] */
 ];
 ITEM_SP_TIME_OBJ_SORT = [
-    0,
+    0,1 /*
     5,10,4,27,6,3, // A
     26,37,30,31, // B
     39, // C
@@ -65,7 +65,7 @@ ITEM_SP_TIME_OBJ_SORT = [
     25,18, // T
     9, // U
     8,29, // V
-    41 // W
+    41 // W */
 ];
 //ITEM_SP_TIME_OBJ_SORT = [0,1,2,3,4,5,6,7,8,37,9,10,39,11,12,13,14,15,16,17,18,19,20,21,22,23,36,24,25,26,27,40,28,29,30,31,32,33,34,38,35,41,42,43,44,45];
 }

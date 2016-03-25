@@ -839,7 +839,7 @@ function LoadDataINIT()
 	}
 	else
 	{
-		for(var i=0;i<=44;i++)
+		for(var i=0;i<CardShort.length;i++)
 		{
 			DataShortCut[0][i][3] = CardShort[i][0];
 			DataShortCut[0][i][4] = CardShort[i][1];
@@ -2148,7 +2148,7 @@ function SetShortCut()
 	}
 	else
 	{
-		for(var i=0;i<=44;i++)
+		for(var i=0;i<CardShort.length;i++)
 			document.calcForm.A_SHORTCUT_R.options[i] = new Option(CardShort[i][4 + Language],i);
 	}
 }
